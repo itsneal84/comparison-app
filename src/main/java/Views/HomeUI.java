@@ -1,4 +1,4 @@
-package view;
+package Views;
 
 /**
  *
@@ -23,7 +23,7 @@ public class HomeUI extends javax.swing.JFrame {
         left_panel = new javax.swing.JPanel();
         menu_holder = new javax.swing.JPanel();
         menu_title_holder = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        compare_lbl = new javax.swing.JLabel();
         shadow_btn1 = new javax.swing.JPanel();
         teams_btn = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -31,11 +31,11 @@ public class HomeUI extends javax.swing.JFrame {
         shadow_btn2 = new javax.swing.JPanel();
         players_holder = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        players_rdo = new javax.swing.JRadioButton();
         shadow_btn3 = new javax.swing.JPanel();
         logo_holder = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        legal_lbl = new javax.swing.JLabel();
+        logo_lbl = new javax.swing.JLabel();
         shadow = new javax.swing.JLabel();
         right_panel = new javax.swing.JPanel();
         jLayeredPane1 = new javax.swing.JLayeredPane();
@@ -62,7 +62,7 @@ public class HomeUI extends javax.swing.JFrame {
         menu_title_holder.setMinimumSize(new java.awt.Dimension(300, 80));
         menu_title_holder.setPreferredSize(new java.awt.Dimension(300, 80));
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/b00380762/comparison/app/images/compare.png"))); // NOI18N
+        compare_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/compare.png"))); // NOI18N
 
         javax.swing.GroupLayout menu_title_holderLayout = new javax.swing.GroupLayout(menu_title_holder);
         menu_title_holder.setLayout(menu_title_holderLayout);
@@ -70,14 +70,14 @@ public class HomeUI extends javax.swing.JFrame {
             menu_title_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menu_title_holderLayout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(compare_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         menu_title_holderLayout.setVerticalGroup(
             menu_title_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menu_title_holderLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
+                .addComponent(compare_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -99,10 +99,15 @@ public class HomeUI extends javax.swing.JFrame {
 
         teams_btn.setBackground(new java.awt.Color(3, 54, 73));
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/b00380762/comparison/app/images/teams.png"))); // NOI18N
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/teams.png"))); // NOI18N
 
         teams_rdo.setBackground(teams_btn.getBackground());
         teams_rdo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        teams_rdo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                teams_rdoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout teams_btnLayout = new javax.swing.GroupLayout(teams_btn);
         teams_btn.setLayout(teams_btnLayout);
@@ -146,9 +151,14 @@ public class HomeUI extends javax.swing.JFrame {
 
         players_holder.setBackground(teams_btn.getBackground());
 
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/b00380762/comparison/app/images/players.png"))); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/players.png"))); // NOI18N
 
-        jRadioButton2.setBackground(teams_rdo.getBackground());
+        players_rdo.setBackground(teams_rdo.getBackground());
+        players_rdo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                players_rdoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout players_holderLayout = new javax.swing.GroupLayout(players_holder);
         players_holder.setLayout(players_holderLayout);
@@ -158,7 +168,7 @@ public class HomeUI extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton2)
+                .addComponent(players_rdo)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         players_holderLayout.setVerticalGroup(
@@ -169,7 +179,7 @@ public class HomeUI extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(players_holderLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addComponent(jRadioButton2)
+                .addComponent(players_rdo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -218,28 +228,28 @@ public class HomeUI extends javax.swing.JFrame {
 
         logo_holder.setBackground(left_panel.getBackground());
 
-        jLabel1.setFont(new java.awt.Font("Titillium Web Light", 0, 12)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(3, 54, 73));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("19/20 statistics provided by www.eliteleague.co.uk");
+        legal_lbl.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        legal_lbl.setForeground(new java.awt.Color(3, 54, 73));
+        legal_lbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        legal_lbl.setText("19/20 statistics provided by www.eliteleague.co.uk");
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/b00380762/comparison/app/images/logo.png"))); // NOI18N
+        logo_lbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        logo_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/logo.png"))); // NOI18N
 
         javax.swing.GroupLayout logo_holderLayout = new javax.swing.GroupLayout(logo_holder);
         logo_holder.setLayout(logo_holderLayout);
         logo_holderLayout.setHorizontalGroup(
             logo_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(legal_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addComponent(logo_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         logo_holderLayout.setVerticalGroup(
             logo_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, logo_holderLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logo_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
+                .addComponent(legal_lbl)
                 .addContainerGap())
         );
 
@@ -258,7 +268,7 @@ public class HomeUI extends javax.swing.JFrame {
                 .addComponent(logo_holder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        shadow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/b00380762/comparison/app/images/shadow.png"))); // NOI18N
+        shadow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/shadow.png"))); // NOI18N
         shadow.setAlignmentY(0.0F);
         shadow.setMinimumSize(new java.awt.Dimension(20, 700));
         shadow.setName("shadow"); // NOI18N
@@ -266,7 +276,7 @@ public class HomeUI extends javax.swing.JFrame {
         right_panel.setToolTipText("right-panel");
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/b00380762/comparison/app/images/pie.png"))); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/pie.png"))); // NOI18N
         jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         jLayeredPane1.setLayer(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -276,7 +286,7 @@ public class HomeUI extends javax.swing.JFrame {
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE)
+                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jLayeredPane1Layout.setVerticalGroup(
@@ -323,6 +333,24 @@ public class HomeUI extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void teams_rdoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_teams_rdoActionPerformed
+        //create new instance of teams ui    
+        TeamsUI teamsUI = new TeamsUI();
+        //close this view
+        this.dispose();
+        //open the teams view & set it to visible
+        teamsUI.setVisible(true);
+    }//GEN-LAST:event_teams_rdoActionPerformed
+
+    private void players_rdoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_players_rdoActionPerformed
+        //create new instance of players ui    
+        PlayersUI playersUI = new PlayersUI();
+        //close this view
+        this.dispose();
+        //open the teams view & set it to visible
+        playersUI.setVisible(true);
+    }//GEN-LAST:event_players_rdoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -359,19 +387,19 @@ public class HomeUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel compare_lbl;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLayeredPane jLayeredPane1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JPanel left_panel;
+    private javax.swing.JLabel legal_lbl;
     private javax.swing.JPanel logo_holder;
+    private javax.swing.JLabel logo_lbl;
     private javax.swing.JPanel menu_holder;
     private javax.swing.JPanel menu_title_holder;
     private javax.swing.JPanel players_holder;
+    private javax.swing.JRadioButton players_rdo;
     private javax.swing.JPanel right_panel;
     private javax.swing.JLabel shadow;
     private javax.swing.JPanel shadow_btn1;
