@@ -47,15 +47,19 @@ public class PlayersUI extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(1000, 800));
+        setMinimumSize(new java.awt.Dimension(1000, 700));
+        setPreferredSize(new java.awt.Dimension(1000, 800));
+        setResizable(false);
 
         left_panel.setBackground(new java.awt.Color(3, 101, 100));
         left_panel.setToolTipText("left-panel");
         left_panel.setAlignmentX(0.0F);
         left_panel.setAlignmentY(0.0F);
-        left_panel.setMaximumSize(new java.awt.Dimension(300, 800));
-        left_panel.setMinimumSize(new java.awt.Dimension(300, 700));
+        left_panel.setMaximumSize(new java.awt.Dimension(300, 900));
+        left_panel.setMinimumSize(new java.awt.Dimension(300, 900));
         left_panel.setName("left-panel"); // NOI18N
-        left_panel.setPreferredSize(new java.awt.Dimension(300, 800));
+        left_panel.setPreferredSize(new java.awt.Dimension(300, 900));
 
         menu_holder.setBackground(left_panel.getBackground());
 
@@ -98,11 +102,20 @@ public class PlayersUI extends javax.swing.JFrame {
         );
 
         teams_btn.setBackground(new java.awt.Color(3, 54, 73));
+        teams_btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                teams_btnMousePressed(evt);
+            }
+        });
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/teams.png"))); // NOI18N
+        jLabel4.setMaximumSize(new java.awt.Dimension(145, 33));
+        jLabel4.setMinimumSize(new java.awt.Dimension(145, 33));
+        jLabel4.setPreferredSize(new java.awt.Dimension(145, 33));
 
         teams_rdo.setBackground(teams_btn.getBackground());
         teams_rdo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        teams_rdo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         teams_rdo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 teams_rdoActionPerformed(evt);
@@ -118,7 +131,7 @@ public class PlayersUI extends javax.swing.JFrame {
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(teams_rdo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         teams_btnLayout.setVerticalGroup(
             teams_btnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,9 +163,13 @@ public class PlayersUI extends javax.swing.JFrame {
         players_holder.setBackground(teams_btn.getBackground());
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/players.png"))); // NOI18N
+        jLabel5.setMaximumSize(new java.awt.Dimension(145, 33));
+        jLabel5.setMinimumSize(new java.awt.Dimension(145, 33));
+        jLabel5.setPreferredSize(new java.awt.Dimension(145, 33));
 
         players_rdo.setBackground(teams_btn.getBackground());
         players_rdo.setSelected(true);
+        players_rdo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         players_rdo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 players_rdoActionPerformed(evt);
@@ -168,7 +185,7 @@ public class PlayersUI extends javax.swing.JFrame {
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(players_rdo)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 50, Short.MAX_VALUE))
         );
         players_holderLayout.setVerticalGroup(
             players_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -263,7 +280,7 @@ public class PlayersUI extends javax.swing.JFrame {
             left_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, left_panelLayout.createSequentialGroup()
                 .addComponent(menu_holder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 346, Short.MAX_VALUE)
                 .addComponent(logo_holder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -273,6 +290,9 @@ public class PlayersUI extends javax.swing.JFrame {
         shadow.setName("shadow"); // NOI18N
 
         right_panel.setToolTipText("right-panel");
+        right_panel.setMaximumSize(new java.awt.Dimension(1180, 900));
+        right_panel.setMinimumSize(new java.awt.Dimension(1180, 900));
+        right_panel.setPreferredSize(new java.awt.Dimension(1180, 900));
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/pie.png"))); // NOI18N
@@ -321,14 +341,15 @@ public class PlayersUI extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(left_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(shadow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(left_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(shadow, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(right_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(1516, 939));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void teams_rdoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_teams_rdoActionPerformed
@@ -349,6 +370,14 @@ public class PlayersUI extends javax.swing.JFrame {
         teamsUI.setVisible(true);
     }//GEN-LAST:event_players_rdoActionPerformed
 
+    private void teams_btnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_teams_btnMousePressed
+        //create new instance of teams ui
+        TeamsUI teamsUI = new TeamsUI();
+        //close this view
+        this.dispose();
+        //open the teams view & set it to visible
+        teamsUI.setVisible(true);    }//GEN-LAST:event_teams_btnMousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -360,7 +389,7 @@ public class PlayersUI extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("FlatLaf".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
