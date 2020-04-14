@@ -2,10 +2,16 @@ package Views;
 
 import Models.Team;
 import Models.TeamHash;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import javax.swing.JComboBox;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -14,18 +20,27 @@ import javax.swing.table.DefaultTableModel;
 public class TeamsUI extends javax.swing.JFrame {
     private Team[] teams;
     private HashMap<Integer, Team> teamMap;
+    private TreeMap<Integer, String> teamValues;
+    private TreeMap<Integer, TreeMap> allTeamsTreeMap;
     
-    public TeamsUI(){
-       TeamHash teamHash = new TeamHash();
-       teamMap = teamHash.AllTeamsHash();
-       teams = teamHash.AllTeamsArray();
-       
-       initComponents();
-       
-       teams = teamHash.AllTeamsArray();
-       
-       JComboBox teams_cmbo = new JComboBox(teams);
-       menu_holder.add(teams_cmbo);
+    public TeamsUI() {
+        TeamHash teamHash = new TeamHash();
+        Team team = new Team();
+        teamMap = teamHash.AllTeamsHash();
+        teams = teamHash.AllTeamsArray();
+        teamValues = team.AllValuesTreeMap();
+        allTeamsTreeMap = teamHash.AllTeamsTree();
+
+        initComponents();
+
+        teams = teamHash.AllTeamsArray();
+
+        JComboBox teams_cmbo = new JComboBox(teams);
+        menu_holder.add(teams_cmbo);
+
+        comp_cmbo.setVisible(false);
+        best_chk.setVisible(false);
+        worst_chk.setVisible(false);
     }
 
     /**
@@ -57,13 +72,21 @@ public class TeamsUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         shadow = new javax.swing.JLabel();
         right_panel = new javax.swing.JPanel();
-        right_top_panel = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        top_panel = new javax.swing.JPanel();
+        team1_holder = new javax.swing.JPanel();
         team1_title_lbl = new javax.swing.JLabel();
         team1_lbl = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        team1_result_lbl = new javax.swing.JLabel();
+        result1_lbl = new javax.swing.JLabel();
+        team2_holder = new javax.swing.JPanel();
         team2_title_lbl = new javax.swing.JLabel();
         team2_lbl = new javax.swing.JLabel();
+        team2_result_lbl = new javax.swing.JLabel();
+        result2_lbl = new javax.swing.JLabel();
+        comparison_holder = new javax.swing.JPanel();
+        comp_cmbo = new javax.swing.JComboBox<>();
+        best_chk = new javax.swing.JCheckBox();
+        worst_chk = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         teams_tbl = new javax.swing.JTable();
         clear_btn = new javax.swing.JButton();
@@ -378,9 +401,9 @@ public class TeamsUI extends javax.swing.JFrame {
         right_panel.setMinimumSize(new java.awt.Dimension(1180, 900));
         right_panel.setPreferredSize(new java.awt.Dimension(1180, 900));
 
-        right_top_panel.setMaximumSize(new java.awt.Dimension(700, 100));
-        right_top_panel.setMinimumSize(new java.awt.Dimension(700, 100));
-        right_top_panel.setPreferredSize(new java.awt.Dimension(700, 100));
+        top_panel.setMaximumSize(new java.awt.Dimension(700, 100));
+        top_panel.setMinimumSize(new java.awt.Dimension(700, 100));
+        top_panel.setPreferredSize(new java.awt.Dimension(700, 100));
 
         team1_title_lbl.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         team1_title_lbl.setForeground(new java.awt.Color(3, 22, 52));
@@ -389,34 +412,46 @@ public class TeamsUI extends javax.swing.JFrame {
         team1_lbl.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         team1_lbl.setForeground(new java.awt.Color(3, 54, 73));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(15, 15, 15)
-                    .addComponent(team1_title_lbl)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(team1_lbl)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+        team1_result_lbl.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+
+        result1_lbl.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        result1_lbl.setText("Result:");
+
+        javax.swing.GroupLayout team1_holderLayout = new javax.swing.GroupLayout(team1_holder);
+        team1_holder.setLayout(team1_holderLayout);
+        team1_holderLayout.setHorizontalGroup(
+            team1_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(team1_holderLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(team1_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(result1_lbl)
+                    .addComponent(team1_title_lbl))
+                .addGroup(team1_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(team1_holderLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(team1_lbl))
+                    .addGroup(team1_holderLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(team1_result_lbl)))
+                .addGap(0, 44, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(40, 40, 40)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(team1_lbl)
-                        .addComponent(team1_title_lbl))
-                    .addGap(0, 0, 0)))
+        team1_holderLayout.setVerticalGroup(
+            team1_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(team1_holderLayout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(team1_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(team1_lbl)
+                    .addComponent(team1_title_lbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(team1_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(result1_lbl)
+                    .addComponent(team1_result_lbl))
+                .addContainerGap())
         );
 
-        jPanel2.setMaximumSize(new java.awt.Dimension(250, 100));
-        jPanel2.setMinimumSize(new java.awt.Dimension(250, 100));
-        jPanel2.setPreferredSize(new java.awt.Dimension(250, 100));
+        team2_holder.setMaximumSize(new java.awt.Dimension(250, 100));
+        team2_holder.setMinimumSize(new java.awt.Dimension(250, 100));
+        team2_holder.setPreferredSize(new java.awt.Dimension(250, 100));
 
         team2_title_lbl.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         team2_title_lbl.setForeground(new java.awt.Color(3, 22, 52));
@@ -425,44 +460,119 @@ public class TeamsUI extends javax.swing.JFrame {
         team2_lbl.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         team2_lbl.setForeground(new java.awt.Color(3, 54, 73));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(team2_title_lbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(team2_lbl)
-                .addGap(0, 0, 0))
+        team2_result_lbl.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        team2_result_lbl.setToolTipText("");
+
+        result2_lbl.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        result2_lbl.setText("Result:");
+
+        javax.swing.GroupLayout team2_holderLayout = new javax.swing.GroupLayout(team2_holder);
+        team2_holder.setLayout(team2_holderLayout);
+        team2_holderLayout.setHorizontalGroup(
+            team2_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(team2_holderLayout.createSequentialGroup()
+                .addGroup(team2_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(result2_lbl)
+                    .addComponent(team2_title_lbl))
+                .addGroup(team2_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(team2_holderLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(team2_lbl))
+                    .addGroup(team2_holderLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(team2_result_lbl)))
+                .addGap(150, 150, 150))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        team2_holderLayout.setVerticalGroup(
+            team2_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(team2_holderLayout.createSequentialGroup()
                 .addGap(40, 40, 40)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(team2_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(team2_title_lbl)
                     .addComponent(team2_lbl))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(team2_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(result2_lbl)
+                    .addComponent(team2_result_lbl))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout right_top_panelLayout = new javax.swing.GroupLayout(right_top_panel);
-        right_top_panel.setLayout(right_top_panelLayout);
-        right_top_panelLayout.setHorizontalGroup(
-            right_top_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(right_top_panelLayout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+        comp_cmbo.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        comp_cmbo.setForeground(new java.awt.Color(3, 22, 52));
+        comp_cmbo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Compare", "Games played", "Wins", "Losses", "Overtime wins", "Overtime losses", "Win %", "Points", "Goals scored", "Goals against", "Goals For average", "Goals Againts average", "Average attendance", "Shots on goal for", "Shots on goal against", "Face-offs won %", "Face-offs won Total", "Powerplay %", "Powerplay Total", "Penalty killing %", "Penalty killing Total" }));
+        comp_cmbo.setMaximumSize(new java.awt.Dimension(200, 30));
+        comp_cmbo.setMinimumSize(new java.awt.Dimension(200, 30));
+        comp_cmbo.setPreferredSize(new java.awt.Dimension(200, 30));
+        comp_cmbo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comp_cmboItemStateChanged(evt);
+            }
+        });
+
+        best_chk.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        best_chk.setText("best");
+        best_chk.setAlignmentY(0.0F);
+        best_chk.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        best_chk.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        best_chk.setIconTextGap(5);
+        best_chk.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        best_chk.setMaximumSize(new java.awt.Dimension(49, 30));
+        best_chk.setMinimumSize(new java.awt.Dimension(49, 30));
+        best_chk.setPreferredSize(new java.awt.Dimension(49, 30));
+        best_chk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                best_chkMouseClicked(evt);
+            }
+        });
+
+        worst_chk.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        worst_chk.setText("worst");
+
+        javax.swing.GroupLayout comparison_holderLayout = new javax.swing.GroupLayout(comparison_holder);
+        comparison_holder.setLayout(comparison_holderLayout);
+        comparison_holderLayout.setHorizontalGroup(
+            comparison_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(comparison_holderLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(comp_cmbo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(best_chk, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(worst_chk)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        right_top_panelLayout.setVerticalGroup(
-            right_top_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(right_top_panelLayout.createSequentialGroup()
+        comparison_holderLayout.setVerticalGroup(
+            comparison_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, comparison_holderLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(comparison_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(comparison_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(best_chk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(worst_chk))
+                    .addComponent(comp_cmbo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28))
+        );
+
+        javax.swing.GroupLayout top_panelLayout = new javax.swing.GroupLayout(top_panel);
+        top_panel.setLayout(top_panelLayout);
+        top_panelLayout.setHorizontalGroup(
+            top_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(top_panelLayout.createSequentialGroup()
+                .addComponent(team1_holder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addGroup(right_top_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(team2_holder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(comparison_holder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(35, 35, 35))
+        );
+        top_panelLayout.setVerticalGroup(
+            top_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(top_panelLayout.createSequentialGroup()
+                .addGroup(top_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(comparison_holder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(team1_holder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(team2_holder, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jScrollPane1.setMaximumSize(new java.awt.Dimension(700, 800));
@@ -511,7 +621,7 @@ public class TeamsUI extends javax.swing.JFrame {
             .addGroup(right_panelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(right_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(right_top_panel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1160, Short.MAX_VALUE)
+                    .addComponent(top_panel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1160, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1160, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, right_panelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -521,7 +631,7 @@ public class TeamsUI extends javax.swing.JFrame {
         right_panelLayout.setVerticalGroup(
             right_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(right_panelLayout.createSequentialGroup()
-                .addComponent(right_top_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(top_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 613, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -570,43 +680,70 @@ public class TeamsUI extends javax.swing.JFrame {
     }//GEN-LAST:event_players_holderMousePressed
 
     private void go_btnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_go_btnMouseClicked
+        //get the selected team from both combo boxes
         String selectedTeam1 = (String)team1_cmbo.getSelectedItem();
         String selectedTeam2 = (String)team2_cmbo.getSelectedItem();
         DefaultTableModel tableModel = (DefaultTableModel) teams_tbl.getModel();
         
-        for(Map.Entry<Integer, Team> entry : teamMap.entrySet()) {
-            if(entry.getValue().getTeamName().equals(selectedTeam1)){
-                for(int i = 0; i < teamMap.size(); i++){
-                    Object[] teamData = new Object[21];
-                    teamData[0] = teamMap.get(i).getTeamName();
-                    teamData[1] = teamMap.get(i).getGamesPlayed();
-                    teamData[2] = teamMap.get(i).getWins();
-                    teamData[3] = teamMap.get(i).getLosses();
-                    teamData[4] = teamMap.get(i).getOvertimeWins();
-                    teamData[5] = teamMap.get(i).getOvertimeLosses();
-                    teamData[6] = teamMap.get(i).getWinPct();
-                    teamData[7] = teamMap.get(i).getPoints();
-                    teamData[8] = teamMap.get(i).getGoalsScored();
-                    teamData[9] = teamMap.get(i).getGoalsAgainst();
-                    teamData[10] = teamMap.get(i).getAvgGoalsFor();
-                    teamData[11] = teamMap.get(i).getAvgGoalsAgainst();
-                    teamData[12] = teamMap.get(i).getAvgAttendance();
-                    teamData[13] = teamMap.get(i).getShotsOnGoalFor();
-                    teamData[14] = teamMap.get(i).getShotsOnGoalAgainst();
-                    teamData[15] = teamMap.get(i).getFaceoffWinPct();
-                    teamData[16] = teamMap.get(i).getFaceoffWinTotal();
-                    teamData[17] = teamMap.get(i).getPowerplayPct();
-                    teamData[18] = teamMap.get(i).getPowerplayTotal();
-                    teamData[19] = teamMap.get(i).getPenaltyKillsPct();
-                    teamData[20] = teamMap.get(i).getPenaltyKillsTotal();                    
-                    
-                    tableModel.addRow(teamData);
+        if (selectedTeam1 != "All Teams" && (selectedTeam1.equalsIgnoreCase("Select Team1") || selectedTeam2.equalsIgnoreCase("Select Team2"))) {
+                error_lbl.setText("Please select a team");
+        }else{
+            //set comparison options to visible
+            comp_cmbo.setVisible(true);
+            best_chk.setVisible(true);
+            worst_chk.setVisible(true);
+            
+            //clear any previous errors
+            error_lbl.setText("");
+            
+            //get the values from the team hashmap
+            for (Map.Entry<Integer, Team> entry : teamMap.entrySet()) {
+                //check that the hash value matches the team name selected
+                if (entry.getValue().getTeamName().equals(selectedTeam1)) {
+                    int k = entry.getKey();
+                    populateTable(tableModel, k);
+                }
+                if (entry.getValue().getTeamName().equals(selectedTeam2)) {
+                    int k = entry.getKey();
+                    populateTable(tableModel, k);
+                }
+                if (selectedTeam1.equalsIgnoreCase("All Teams")) {
+                    int k = entry.getKey();
+                    populateTable(tableModel, k);
                 }
             }
-        }
-        
+        }    
     }//GEN-LAST:event_go_btnMouseClicked
 
+    private void populateTable(DefaultTableModel tableModel, int k){
+        //build an array of the team details from Map
+        Object[] teamData = new Object[21];
+        teamData[0] = teamMap.get(k).getTeamName();
+        teamData[1] = teamMap.get(k).getGamesPlayed();
+        teamData[2] = teamMap.get(k).getWins();
+        teamData[3] = teamMap.get(k).getLosses();
+        teamData[4] = teamMap.get(k).getOvertimeWins();
+        teamData[5] = teamMap.get(k).getOvertimeLosses();
+        teamData[6] = teamMap.get(k).getWinPct();
+        teamData[7] = teamMap.get(k).getPoints();
+        teamData[8] = teamMap.get(k).getGoalsScored();
+        teamData[9] = teamMap.get(k).getGoalsAgainst();
+        teamData[10] = teamMap.get(k).getAvgGoalsFor();
+        teamData[11] = teamMap.get(k).getAvgGoalsAgainst();
+        teamData[12] = teamMap.get(k).getAvgAttendance();
+        teamData[13] = teamMap.get(k).getShotsOnGoalFor();
+        teamData[14] = teamMap.get(k).getShotsOnGoalAgainst();
+        teamData[15] = teamMap.get(k).getFaceoffWinPct();
+        teamData[16] = teamMap.get(k).getFaceoffWinTotal();
+        teamData[17] = teamMap.get(k).getPowerplayPct();
+        teamData[18] = teamMap.get(k).getPowerplayTotal();
+        teamData[19] = teamMap.get(k).getPenaltyKillsPct();
+        teamData[20] = teamMap.get(k).getPenaltyKillsTotal();
+
+        //add them to a table row
+        tableModel.addRow(teamData);
+    }
+    
     private void team1_cmboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_team1_cmboItemStateChanged
         String selectedTeam = (String)team1_cmbo.getSelectedItem();
         
@@ -630,7 +767,7 @@ public class TeamsUI extends javax.swing.JFrame {
         String selectedTeam2 = (String)team2_cmbo.getSelectedItem();
         
         //make sure the teams selected are different
-        if(selectedTeam1 == selectedTeam2){
+        if(selectedTeam1.equals(selectedTeam2)){
             error_lbl.setText("Error: please select different teams");
         }
         
@@ -642,6 +779,121 @@ public class TeamsUI extends javax.swing.JFrame {
         DefaultTableModel tableModel = (DefaultTableModel) teams_tbl.getModel();
         tableModel.setRowCount(0);
     }//GEN-LAST:event_clear_btnMouseClicked
+
+    private void best_chkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_best_chkMouseClicked
+        //clear previous results
+        team1_result_lbl.setText("");
+        team2_result_lbl.setText("");
+
+        //get the values from the combo boxes
+        String valueToCompare = (String)comp_cmbo.getSelectedItem();
+        String selectedTeam1 = (String)team1_cmbo.getSelectedItem();
+        String selectedTeam2 = (String)team2_cmbo.getSelectedItem();
+        String chkTeam1 = "";
+        String chkTeam2 = "";
+
+        //get the key value for what we're comparing from the treeMap of values
+        for (Map.Entry<Integer, String> teamValueEntry : teamValues.entrySet()) {
+            if (teamValueEntry.getValue().equalsIgnoreCase(valueToCompare)) {
+                //save the value we found
+                int teamValueKey = teamValueEntry.getKey();
+                //check if all teams are selected
+                if (selectedTeam1.equalsIgnoreCase("All Teams")) {
+                    //if they are there is nothing to compare so sort table
+                    CompareTable(teamValueKey);
+                    break; //nothing else to do so exit loop
+                }
+                //get the team that matches the first selected
+                for (Map.Entry<Integer, TreeMap> teamEntry : allTeamsTreeMap.entrySet()) {
+                    if (teamEntry.getValue().containsValue(selectedTeam1)) {
+                        //create a new treeMap of the selected team
+                        TreeMap<Integer, String> team1Value = teamEntry.getValue();
+                        for (Map.Entry<Integer, String> team1Entry : team1Value.entrySet()) {
+                            if (team1Entry.getKey().equals(teamValueKey)) {
+                                int key = team1Entry.getKey();
+                                CompareTable(key);
+                                chkTeam1 = team1Entry.getValue();
+                            }
+                        }
+                    }
+                    if (teamEntry.getValue().containsValue(selectedTeam2)) {
+                        //create a new treeMap of the selected team
+                        TreeMap<Integer, String> team2Value = teamEntry.getValue();
+                        for (Map.Entry<Integer, String> team2Entry : team2Value.entrySet()) {
+                            if (team2Entry.getKey().equals(teamValueKey)) {
+                                int key = team2Entry.getKey();
+                                CompareTable(key);
+                                chkTeam2 = team2Entry.getValue();
+                            }
+                        }
+                    }
+                }
+                double chkTeam1Result = Double.parseDouble(chkTeam1);
+                double chkTeam2Result = Double.parseDouble(chkTeam2);
+                //use key to record which reult is better (higher or lower)
+                if (teamValueKey == 1 || teamValueKey == 2 || teamValueKey == 4 || teamValueKey == 6 || teamValueKey == 7 || teamValueKey == 8 || teamValueKey == 10
+                        || teamValueKey == 13 || teamValueKey == 14 || teamValueKey == 16 || teamValueKey == 17 || teamValueKey == 18 || teamValueKey == 19
+                        || teamValueKey == 20 || teamValueKey == 21) {
+                    if (chkTeam1Result > chkTeam2Result) {
+                        team1_result_lbl.setText(chkTeam1);
+                    }
+                } else {
+                    if (chkTeam1Result > chkTeam2Result) {
+                        team2_result_lbl.setText(chkTeam2);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_best_chkMouseClicked
+
+    private void CompareTable(int key){
+        DefaultTableModel tableModel = (DefaultTableModel) teams_tbl.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        teams_tbl.setRowSorter(sorter);
+        
+        List<RowSorter.SortKey>sortKeys = new ArrayList<>();
+        if(key == 1 || key == 2 || key == 4 || key == 6 || key == 7 || key == 8 || key == 10 || key == 13 || key == 14
+                || key == 16 || key == 17 || key == 18 || key == 19 || key == 20 || key == 21){
+            sortKeys.add(new RowSorter.SortKey(key, SortOrder.ASCENDING));
+        }
+        else{
+            sortKeys.add(new RowSorter.SortKey(key, SortOrder.DESCENDING));
+        }
+        sorter.setSortKeys(sortKeys);
+        teams_tbl.getRowSorter().toggleSortOrder(key);
+    }
+    public void getHashValues(){
+
+//        Object[] teamData = new Object[21];
+//        teamData[0] = teamMap.get(k).getTeamName();
+//        teamData[1] = teamMap.get(k).getGamesPlayed();
+//        teamData[2] = teamMap.get(k).getWins();
+//        teamData[3] = teamMap.get(k).getLosses();
+//        teamData[4] = teamMap.get(k).getOvertimeWins();
+//        teamData[5] = teamMap.get(k).getOvertimeLosses();
+//        teamData[6] = teamMap.get(k).getWinPct();
+//        teamData[7] = teamMap.get(k).getPoints();
+//        teamData[8] = teamMap.get(k).getGoalsScored();
+//        teamData[9] = teamMap.get(k).getGoalsAgainst();
+//        teamData[10] = teamMap.get(k).getAvgGoalsFor();
+//        teamData[11] = teamMap.get(k).getAvgGoalsAgainst();
+//        teamData[12] = teamMap.get(k).getAvgAttendance();
+//        teamData[13] = teamMap.get(k).getShotsOnGoalFor();
+//        teamData[14] = teamMap.get(k).getShotsOnGoalAgainst();
+//        teamData[15] = teamMap.get(k).getFaceoffWinPct();
+//        teamData[16] = teamMap.get(k).getFaceoffWinTotal();
+//        teamData[17] = teamMap.get(k).getPowerplayPct();
+//        teamData[18] = teamMap.get(k).getPowerplayTotal();
+//        teamData[19] = teamMap.get(k).getPenaltyKillsPct();
+//        teamData[20] = teamMap.get(k).getPenaltyKillsTotal();
+//        
+//        return value;
+    }
+    
+    private void comp_cmboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comp_cmboItemStateChanged
+        best_chk.setSelected(false);
+        worst_chk.setSelected(false);
+    }//GEN-LAST:event_comp_cmboItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -680,14 +932,15 @@ public class TeamsUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox best_chk;
     private javax.swing.JButton clear_btn;
+    private javax.swing.JComboBox<String> comp_cmbo;
     private javax.swing.JLabel compare_lbl;
+    private javax.swing.JPanel comparison_holder;
     private javax.swing.JLabel error_lbl;
     private javax.swing.JButton go_btn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel left_panel;
     private javax.swing.JPanel logo_holder;
@@ -696,21 +949,28 @@ public class TeamsUI extends javax.swing.JFrame {
     private javax.swing.JPanel players_holder;
     private javax.swing.JLabel players_lbl;
     private javax.swing.JRadioButton players_rdo;
+    private javax.swing.JLabel result1_lbl;
+    private javax.swing.JLabel result2_lbl;
     private javax.swing.JPanel right_panel;
-    private javax.swing.JPanel right_top_panel;
     private javax.swing.JLabel shadow;
     private javax.swing.JPanel shadow_btn1;
     private javax.swing.JPanel shadow_btn2;
     private javax.swing.JPanel shadow_btn3;
     private javax.swing.JComboBox<String> team1_cmbo;
+    private javax.swing.JPanel team1_holder;
     private javax.swing.JLabel team1_lbl;
+    private javax.swing.JLabel team1_result_lbl;
     private javax.swing.JLabel team1_title_lbl;
     private javax.swing.JComboBox<String> team2_cmbo;
+    private javax.swing.JPanel team2_holder;
     private javax.swing.JLabel team2_lbl;
+    private javax.swing.JLabel team2_result_lbl;
     private javax.swing.JLabel team2_title_lbl;
     private javax.swing.JPanel teams_btn;
     private javax.swing.JLabel teams_lbl;
     private javax.swing.JRadioButton teams_rdo;
     private javax.swing.JTable teams_tbl;
+    private javax.swing.JPanel top_panel;
+    private javax.swing.JCheckBox worst_chk;
     // End of variables declaration//GEN-END:variables
 }

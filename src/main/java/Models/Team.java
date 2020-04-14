@@ -1,5 +1,7 @@
 package Models;
 
+import java.util.TreeMap;
+
 /**
  *
  * @author Neal Nisbet B00380762
@@ -177,7 +179,12 @@ public class Team {
     }
     // </editor-fold>
     
-    //constructor
+    //empty constructor
+    public Team(){
+        
+    }
+    
+    //overloaded constructor
     public Team(String teamNameIn, int gamesPlayedIn, int winsIn, int lossesIn, int overtimeWinsIn, int overtimeLossesIn, double winPctIn, int pointsIn,
             int goalsScoredIn, int goalsAgainstIn, double avgGoalsForIn, double avgGoalsAgainstIn, double avgAttendanceIn, int shotsOnGoalForIn,
             int shotsOnGoalAgainstIn, double faceoffWinPctIn, double faceoffWinTotalIn, double powerplayPctIn, int powerplayTotalIn, double penaltyKillsPctIn, int penaltyKillsTotalIn) {
@@ -202,5 +209,32 @@ public class Team {
         powerplayTotal = powerplayTotalIn;
         penaltyKillsPct = penaltyKillsPctIn;
         penaltyKillsTotal = penaltyKillsTotalIn;
+    }
+    
+    public TreeMap<Integer, String> AllValuesTreeMap(){
+        TreeMap<Integer, String> allValues = new TreeMap<>();
+        allValues.put(0, "Team Name");
+        allValues.put(1, "Games Played");
+        allValues.put(2, "Wins");
+        allValues.put(3, "Losses");
+        allValues.put(4, "Overtime Wins");
+        allValues.put(5, "Overtime Losses");
+        allValues.put(6, "Win %");
+        allValues.put(7, "Points");
+        allValues.put(8, "Goals Scored");
+        allValues.put(9, "Goals Against");
+        allValues.put(10, "Avg Goals For");
+        allValues.put(11, "Avg Goals Against");
+        allValues.put(12, "Avg Attendance");
+        allValues.put(13, "Shots On Goal For");
+        allValues.put(14, "Shots On Goal Against");
+        allValues.put(15, "Faceoff Win %");
+        allValues.put(16, "Faceoff Win Total");
+        allValues.put(17, "Powerplay %");
+        allValues.put(18, "Powerplay Total");
+        allValues.put(19, "Penalty Kills %");
+        allValues.put(20, "Penalty Kills Total");
+        
+        return allValues;
     }
 }
