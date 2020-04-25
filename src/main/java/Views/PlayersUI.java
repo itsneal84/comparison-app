@@ -1,9 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Views;
+
+import Models.Player;
+import Models.PlayerHash;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -11,11 +18,34 @@ package Views;
  */
 public class PlayersUI extends javax.swing.JFrame {
 
-    /**
-     * Creates new form PlayersUI
-     */
+    private Player[] players;
+    private HashMap<Integer, Player> playerMap;
+    private TreeMap<Integer, String> playerValues;
+    private TreeMap<Integer, String> goalieValues;
+    private TreeMap<Integer, TreeMap> allPlayerTree;
+
     public PlayersUI() {
+        Player player = new Player();
+        PlayerHash playerHash = new PlayerHash();
+        players = playerHash.AllPlayersArray();
+        playerMap = playerHash.AllPLayersHash();
+        allPlayerTree = playerHash.AllPlayersTree();
+        playerValues = player.AllPlayerValuesTreeMap();
+        goalieValues = player.AllGoalieValuesTreeMap();
+
         initComponents();
+
+        populatePlayerCombo();
+
+        //hide the tables until selected
+        player_scroll_panel.setVisible(false);
+        goalie_scroll_panel.setVisible(false);
+        //hide top panels
+        player1_panel.setVisible(false);
+        player2_panel.setVisible(false);
+        comparison_panel.setVisible(false);
+        go_btn.setVisible(false);
+
     }
 
     /**
@@ -38,13 +68,36 @@ public class PlayersUI extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         players_rdo = new javax.swing.JRadioButton();
         shadow_btn3 = new javax.swing.JPanel();
+        player1_cmbo = new javax.swing.JComboBox<>();
+        player2_cmbo = new javax.swing.JComboBox<>();
+        go_btn = new javax.swing.JButton();
+        error_lbl = new javax.swing.JLabel();
         logo_holder = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         shadow = new javax.swing.JLabel();
         right_panel = new javax.swing.JPanel();
-        jLayeredPane1 = new javax.swing.JLayeredPane();
+        top_panel = new javax.swing.JPanel();
+        player1_panel = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
+        player1_lbl = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        player1_result_lbl = new javax.swing.JLabel();
+        player2_panel = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        player2_lbl = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        player2_result_lbl = new javax.swing.JLabel();
+        comparison_panel = new javax.swing.JPanel();
+        compare_cmbo = new javax.swing.JComboBox<>();
+        best_chk = new javax.swing.JCheckBox();
+        worst_chk = new javax.swing.JCheckBox();
+        jLayeredPane1 = new javax.swing.JLayeredPane();
+        player_scroll_panel = new javax.swing.JScrollPane();
+        player_tbl = new javax.swing.JTable();
+        goalie_scroll_panel = new javax.swing.JScrollPane();
+        goalie_tbl = new javax.swing.JTable();
+        clear_btn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1000, 800));
@@ -66,6 +119,11 @@ public class PlayersUI extends javax.swing.JFrame {
         menu_title_holder.setBackground(new java.awt.Color(3, 22, 52));
         menu_title_holder.setMaximumSize(new java.awt.Dimension(300, 80));
         menu_title_holder.setMinimumSize(new java.awt.Dimension(300, 80));
+        menu_title_holder.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menu_title_holderMouseClicked(evt);
+            }
+        });
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/compare.png"))); // NOI18N
 
@@ -74,7 +132,7 @@ public class PlayersUI extends javax.swing.JFrame {
         menu_title_holderLayout.setHorizontalGroup(
             menu_title_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menu_title_holderLayout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -131,7 +189,7 @@ public class PlayersUI extends javax.swing.JFrame {
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(teams_rdo)
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         teams_btnLayout.setVerticalGroup(
             teams_btnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -170,11 +228,6 @@ public class PlayersUI extends javax.swing.JFrame {
         players_rdo.setBackground(teams_btn.getBackground());
         players_rdo.setSelected(true);
         players_rdo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        players_rdo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                players_rdoActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout players_holderLayout = new javax.swing.GroupLayout(players_holder);
         players_holder.setLayout(players_holderLayout);
@@ -185,7 +238,7 @@ public class PlayersUI extends javax.swing.JFrame {
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(players_rdo)
-                .addGap(0, 50, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         players_holderLayout.setVerticalGroup(
             players_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,6 +266,49 @@ public class PlayersUI extends javax.swing.JFrame {
             .addGap(0, 5, Short.MAX_VALUE)
         );
 
+        player1_cmbo.setBackground(new java.awt.Color(3, 54, 73));
+        player1_cmbo.setFont(new java.awt.Font("Calibri", 0, 24)); // NOI18N
+        player1_cmbo.setForeground(new java.awt.Color(255, 255, 255));
+        player1_cmbo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Player 1" }));
+        player1_cmbo.setMaximumSize(new java.awt.Dimension(300, 50));
+        player1_cmbo.setMinimumSize(new java.awt.Dimension(300, 50));
+        player1_cmbo.setPreferredSize(new java.awt.Dimension(300, 50));
+        player1_cmbo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                player1_cmboItemStateChanged(evt);
+            }
+        });
+
+        player2_cmbo.setBackground(new java.awt.Color(3, 54, 73));
+        player2_cmbo.setFont(new java.awt.Font("Calibri", 0, 24)); // NOI18N
+        player2_cmbo.setForeground(new java.awt.Color(255, 255, 255));
+        player2_cmbo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Player 2" }));
+        player2_cmbo.setMaximumSize(new java.awt.Dimension(300, 50));
+        player2_cmbo.setMinimumSize(new java.awt.Dimension(300, 50));
+        player2_cmbo.setPreferredSize(new java.awt.Dimension(300, 50));
+        player2_cmbo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                player2_cmboItemStateChanged(evt);
+            }
+        });
+
+        go_btn.setBackground(new java.awt.Color(3, 22, 52));
+        go_btn.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        go_btn.setForeground(new java.awt.Color(255, 255, 255));
+        go_btn.setLabel("GO");
+        go_btn.setMargin(new java.awt.Insets(5, 0, 0, 0));
+        go_btn.setMaximumSize(new java.awt.Dimension(300, 50));
+        go_btn.setMinimumSize(new java.awt.Dimension(300, 50));
+        go_btn.setPreferredSize(new java.awt.Dimension(300, 50));
+        go_btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                go_btnMouseClicked(evt);
+            }
+        });
+
+        error_lbl.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        error_lbl.setForeground(new java.awt.Color(255, 255, 255));
+
         javax.swing.GroupLayout menu_holderLayout = new javax.swing.GroupLayout(menu_holder);
         menu_holder.setLayout(menu_holderLayout);
         menu_holderLayout.setHorizontalGroup(
@@ -223,6 +319,16 @@ public class PlayersUI extends javax.swing.JFrame {
             .addComponent(shadow_btn2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(players_holder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(shadow_btn3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addGroup(menu_holderLayout.createSequentialGroup()
+                .addGroup(menu_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(player1_cmbo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(player2_cmbo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(go_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(menu_holderLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(error_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         menu_holderLayout.setVerticalGroup(
             menu_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -239,7 +345,15 @@ public class PlayersUI extends javax.swing.JFrame {
                 .addComponent(players_holder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(shadow_btn3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 64, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addComponent(player1_cmbo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(player2_cmbo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(go_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(error_lbl)
+                .addGap(0, 93, Short.MAX_VALUE))
         );
 
         logo_holder.setBackground(left_panel.getBackground());
@@ -256,7 +370,7 @@ public class PlayersUI extends javax.swing.JFrame {
         logo_holder.setLayout(logo_holderLayout);
         logo_holderLayout.setHorizontalGroup(
             logo_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         logo_holderLayout.setVerticalGroup(
@@ -280,7 +394,7 @@ public class PlayersUI extends javax.swing.JFrame {
             left_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, left_panelLayout.createSequentialGroup()
                 .addComponent(menu_holder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 346, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 155, Short.MAX_VALUE)
                 .addComponent(logo_holder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -294,37 +408,277 @@ public class PlayersUI extends javax.swing.JFrame {
         right_panel.setMinimumSize(new java.awt.Dimension(1180, 900));
         right_panel.setPreferredSize(new java.awt.Dimension(1180, 900));
 
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/pie.png"))); // NOI18N
-        jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        top_panel.setMaximumSize(new java.awt.Dimension(1160, 100));
+        top_panel.setMinimumSize(new java.awt.Dimension(1160, 100));
+        top_panel.setPreferredSize(new java.awt.Dimension(1160, 100));
 
-        jLayeredPane1.setLayer(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLabel6.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(3, 22, 52));
+        jLabel6.setText("Player 1:");
+
+        player1_lbl.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        player1_lbl.setForeground(new java.awt.Color(3, 22, 52));
+
+        jLabel7.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jLabel7.setText("Result:");
+
+        javax.swing.GroupLayout player1_panelLayout = new javax.swing.GroupLayout(player1_panel);
+        player1_panel.setLayout(player1_panelLayout);
+        player1_panelLayout.setHorizontalGroup(
+            player1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(player1_panelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(player1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel6))
+                .addGroup(player1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(player1_panelLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(player1_lbl))
+                    .addGroup(player1_panelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(player1_result_lbl)))
+                .addContainerGap(98, Short.MAX_VALUE))
+        );
+        player1_panelLayout.setVerticalGroup(
+            player1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(player1_panelLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(player1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(player1_lbl)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(player1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(player1_result_lbl))
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+
+        jLabel8.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(3, 22, 52));
+        jLabel8.setText("Player 2:");
+
+        player2_lbl.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        player2_lbl.setForeground(new java.awt.Color(3, 22, 52));
+
+        jLabel9.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jLabel9.setText("Result:");
+
+        javax.swing.GroupLayout player2_panelLayout = new javax.swing.GroupLayout(player2_panel);
+        player2_panel.setLayout(player2_panelLayout);
+        player2_panelLayout.setHorizontalGroup(
+            player2_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(player2_panelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(player2_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel8))
+                .addGroup(player2_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(player2_panelLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(player2_lbl))
+                    .addGroup(player2_panelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(player2_result_lbl)))
+                .addContainerGap(98, Short.MAX_VALUE))
+        );
+        player2_panelLayout.setVerticalGroup(
+            player2_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(player2_panelLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(player2_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(player2_lbl)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(player2_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(player2_result_lbl))
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+
+        compare_cmbo.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        compare_cmbo.setForeground(new java.awt.Color(3, 22, 52));
+        compare_cmbo.setMaximumSize(new java.awt.Dimension(200, 30));
+        compare_cmbo.setMinimumSize(new java.awt.Dimension(200, 30));
+        compare_cmbo.setPreferredSize(new java.awt.Dimension(200, 30));
+        compare_cmbo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                compare_cmboItemStateChanged(evt);
+            }
+        });
+
+        best_chk.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        best_chk.setText("best");
+        best_chk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                best_chkMouseClicked(evt);
+            }
+        });
+
+        worst_chk.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        worst_chk.setText("worst");
+        worst_chk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                worst_chkMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout comparison_panelLayout = new javax.swing.GroupLayout(comparison_panel);
+        comparison_panel.setLayout(comparison_panelLayout);
+        comparison_panelLayout.setHorizontalGroup(
+            comparison_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(comparison_panelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(compare_cmbo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(best_chk)
+                .addGap(18, 18, 18)
+                .addComponent(worst_chk)
+                .addContainerGap(396, Short.MAX_VALUE))
+        );
+        comparison_panelLayout.setVerticalGroup(
+            comparison_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(comparison_panelLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(comparison_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(compare_cmbo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(best_chk)
+                    .addComponent(worst_chk))
+                .addContainerGap(43, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout top_panelLayout = new javax.swing.GroupLayout(top_panel);
+        top_panel.setLayout(top_panelLayout);
+        top_panelLayout.setHorizontalGroup(
+            top_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(top_panelLayout.createSequentialGroup()
+                .addComponent(player1_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(player2_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(comparison_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        top_panelLayout.setVerticalGroup(
+            top_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, top_panelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(top_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(comparison_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(player2_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(player1_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        player_scroll_panel.setToolTipText("");
+        player_scroll_panel.setFont(new java.awt.Font("Calibri", 0, 11)); // NOI18N
+        player_scroll_panel.setMaximumSize(new java.awt.Dimension(700, 550));
+        player_scroll_panel.setMinimumSize(new java.awt.Dimension(700, 550));
+        player_scroll_panel.setPreferredSize(new java.awt.Dimension(700, 550));
+
+        player_tbl.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Number ", "Player Name", "Team", "Position", "Games Played", "Goals", "Assists", "Points", "Penalty Minutes", "Power Play Goals", "Shorthanded Goals", "Shots on Goal", "Shots", "Faceoffs Won", "Faceoffs Lost"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        player_scroll_panel.setViewportView(player_tbl);
+
+        goalie_scroll_panel.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        goalie_scroll_panel.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        goalie_scroll_panel.setMaximumSize(new java.awt.Dimension(700, 180));
+        goalie_scroll_panel.setMinimumSize(new java.awt.Dimension(700, 180));
+        goalie_scroll_panel.setPreferredSize(new java.awt.Dimension(700, 180));
+
+        goalie_tbl.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Number", "Player Name", "Team", "Position", "Games Played", "Wins", "Loses", "Shutouts", "Shots Against", "Goals Against", "Minutes", "Average Goals Against", "Save %"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Double.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        goalie_scroll_panel.setViewportView(goalie_tbl);
+
+        jLayeredPane1.setLayer(player_scroll_panel, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(goalie_scroll_panel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(player_scroll_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 1140, Short.MAX_VALUE)
+                    .addContainerGap()))
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(goalie_scroll_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 1140, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(player_scroll_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                    .addGap(0, 0, 0)
+                    .addComponent(goalie_scroll_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(369, Short.MAX_VALUE)))
         );
+
+        clear_btn.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        clear_btn.setText("clear");
+        clear_btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                clear_btnMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout right_panelLayout = new javax.swing.GroupLayout(right_panel);
         right_panel.setLayout(right_panelLayout);
         right_panelLayout.setHorizontalGroup(
             right_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLayeredPane1)
+            .addGroup(right_panelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(right_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(top_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(clear_btn, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLayeredPane1))
+                .addContainerGap())
         );
         right_panelLayout.setVerticalGroup(
             right_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLayeredPane1)
+            .addGroup(right_panelLayout.createSequentialGroup()
+                .addComponent(top_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLayeredPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(clear_btn)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -335,7 +689,7 @@ public class PlayersUI extends javax.swing.JFrame {
                 .addComponent(left_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(shadow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(right_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -361,15 +715,6 @@ public class PlayersUI extends javax.swing.JFrame {
         teamsUI.setVisible(true);
     }//GEN-LAST:event_teams_rdoActionPerformed
 
-    private void players_rdoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_players_rdoActionPerformed
-        //create new instance of players ui
-        TeamsUI teamsUI = new TeamsUI();
-        //close this view
-        this.dispose();
-        //open the teams view & set it to visible
-        teamsUI.setVisible(true);
-    }//GEN-LAST:event_players_rdoActionPerformed
-
     private void teams_btnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_teams_btnMousePressed
         //create new instance of teams ui
         TeamsUI teamsUI = new TeamsUI();
@@ -377,6 +722,470 @@ public class PlayersUI extends javax.swing.JFrame {
         this.dispose();
         //open the teams view & set it to visible
         teamsUI.setVisible(true);    }//GEN-LAST:event_teams_btnMousePressed
+
+    private void populatePlayerCombo() {
+        //create a new list to hold the player names
+        List<String> player1Names = new ArrayList<>();
+        //set default title selection and all player option
+        player1Names.add("Select Player 1");
+        player1Names.add("All Players");
+        player1Names.add("All Keepers");
+        //loop through the hashmap of players
+        for (Map.Entry<Integer, Player> entry : playerMap.entrySet()) {
+            Player value = entry.getValue();
+            //get the player name and position then save to list
+            player1Names.add(value.getPlayerName() + " " + value.getPosition());
+        }
+        //set the list of players to the combobox
+        player1_cmbo.setModel(new DefaultComboBoxModel<>(player1Names.toArray(new String[0])));
+
+        List<String> player2Names = new ArrayList<>();
+        player2Names.add("Select Player 2");
+        for (Map.Entry<Integer, Player> entry : playerMap.entrySet()) {
+            Player value = entry.getValue();
+            player2Names.add(value.getPlayerName() + " " + value.getPosition());
+        }
+        player2_cmbo.setModel(new DefaultComboBoxModel<>(player2Names.toArray(new String[0])));
+    }
+
+    private void populatePlayerCompareCombo() {
+        List<String> allPlayerValues = new ArrayList<>();
+        allPlayerValues.add("Compare");
+        for (Map.Entry<Integer, String> entry : playerValues.entrySet()) {
+            String value = entry.getValue();
+            allPlayerValues.add(value);
+        }
+        compare_cmbo.setModel(new DefaultComboBoxModel<>(allPlayerValues.toArray(new String[0])));
+    }
+
+    private void populateGoalieCompareCombo() {
+        List<String> allGoalieValues = new ArrayList<>();
+        allGoalieValues.add("Compare");
+        for (Map.Entry<Integer, String> entry : goalieValues.entrySet()) {
+            String value = entry.getValue();
+            allGoalieValues.add(value);
+        }
+        compare_cmbo.setModel(new DefaultComboBoxModel<>(allGoalieValues.toArray(new String[0])));
+    }
+
+    private void go_btnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_go_btnMouseClicked
+        //clear any old errors
+        error_lbl.setText("");
+        best_chk.setEnabled(false);
+        worst_chk.setEnabled(false);
+        
+        goalie_tbl.setVisible(false);
+        player_tbl.setVisible(false);
+        //get the selected team from both combo boxes
+        String selectedPlayer1 = (String) player1_cmbo.getSelectedItem();
+        String selectedPlayer2 = (String) player2_cmbo.getSelectedItem();
+        DefaultTableModel playerModel = (DefaultTableModel) player_tbl.getModel();
+        DefaultTableModel goalieModel = (DefaultTableModel) goalie_tbl.getModel();
+
+        //check for position to display the correct table
+        if (selectedPlayer1.contains("GK") && selectedPlayer2.contains("GK") || selectedPlayer1.equals("All Keepers")) {
+            goalie_scroll_panel.setVisible(true);
+            player1_result_lbl.setText("");
+            player2_result_lbl.setText("");
+
+            //get the goalie values from the player hashmap
+            for (Map.Entry<Integer, Player> entry : playerMap.entrySet()) {
+                if (entry.getValue().getPosition().equalsIgnoreCase("GK")) {
+                    if (entry.getValue().getPlayerName().equals(selectedPlayer1.substring(0, selectedPlayer1.length() - 3))) { //remove the position from the string
+                        int k = entry.getKey();
+                        populateGoalieTable(goalieModel, k);
+                    }
+                    if (entry.getValue().getPlayerName().equals(selectedPlayer2.substring(0, selectedPlayer2.length() - 3))) { //remove the position from the string
+                        int k = entry.getKey();
+                        populateGoalieTable(goalieModel, k);
+                    }
+                    if (selectedPlayer1.equals("All Keepers")) {
+                        int k = entry.getKey();
+                        populateGoalieTable(goalieModel, k);
+                    }
+                }
+            }
+            populateGoalieCompareCombo();
+        } else {
+            player_scroll_panel.setVisible(true);
+            player1_result_lbl.setText("");
+            player2_result_lbl.setText("");
+
+            //get the player values from the player hashmap
+            for (Map.Entry<Integer, Player> entry : playerMap.entrySet()) {
+                if (!entry.getValue().getPosition().equalsIgnoreCase("GK")) { //ignore goal keepers
+                    if (entry.getValue().getPlayerName().equals(selectedPlayer1.substring(0, selectedPlayer1.length() - 3))) { //remove the position from the string
+                        int k = entry.getKey();
+                        populatePlayerTable(playerModel, k);
+                    }
+                    if (entry.getValue().getPlayerName().equals(selectedPlayer2.substring(0, selectedPlayer2.length() - 3))) { //remove the position from the string
+                        int k = entry.getKey();
+                        populatePlayerTable(playerModel, k);
+                    }
+                    if (selectedPlayer1.equals("All Players")) {
+                        int k = entry.getKey();
+                        populatePlayerTable(playerModel, k);
+                    }
+                }
+            }
+            populatePlayerCompareCombo();
+        }
+        if (selectedPlayer1 != "All Players" && selectedPlayer1 != "All Keepers" && (selectedPlayer1.equalsIgnoreCase("Select Player 1") || selectedPlayer2.equalsIgnoreCase("Select Player 2"))) {
+            error_lbl.setText("Please select a player");
+        } else {
+            error_lbl.setText("");
+            player1_panel.setVisible(true);
+            player2_panel.setVisible(true);
+            comparison_panel.setVisible(true);
+            if (selectedPlayer1.contains("GK") || selectedPlayer1.equals("All Keepers")) {
+                goalie_tbl.setVisible(true);
+            } else {
+                player_tbl.setVisible(true);
+            }
+        }
+    }//GEN-LAST:event_go_btnMouseClicked
+
+    private void player1_cmboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_player1_cmboItemStateChanged
+        DefaultTableModel playerTableModel = (DefaultTableModel) player_tbl.getModel();
+        DefaultTableModel goalieTableModel = (DefaultTableModel) goalie_tbl.getModel();
+        //clear any previous table selections
+        playerTableModel.setRowCount(0);
+        goalieTableModel.setRowCount(0);
+        player_tbl.setVisible(false);
+        goalie_tbl.setVisible(false);
+
+        String selectedPlayer1 = (String) player1_cmbo.getSelectedItem();
+        go_btn.setVisible(false);
+
+        if (selectedPlayer1.equalsIgnoreCase("All Players")) {
+            //if it is we dont need a second team
+            player2_cmbo.setVisible(false);
+            player1_panel.setVisible(true);
+            player1_lbl.setText(selectedPlayer1);
+            player2_panel.setVisible(false);
+            //or the goalie table
+            goalie_tbl.setVisible(false);
+
+            go_btn.setVisible(true);
+        } else if (selectedPlayer1.equalsIgnoreCase("All Keepers")) {
+            //if it is we dont need a second team
+            player2_cmbo.setVisible(false);
+            player1_panel.setVisible(true);
+            player1_lbl.setText(selectedPlayer1);
+            player2_panel.setVisible(false);
+            //or the player table
+            player_tbl.setVisible(false);
+
+            go_btn.setVisible(true);
+        } else {
+            //if not we do
+            player2_cmbo.setVisible(true);
+        }
+    }//GEN-LAST:event_player1_cmboItemStateChanged
+
+    private void player2_cmboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_player2_cmboItemStateChanged
+        String selectedPlayer1 = (String) player1_cmbo.getSelectedItem();
+        String selectedPlayer2 = (String) player2_cmbo.getSelectedItem();
+
+        //check both players are different
+        if (selectedPlayer1.equalsIgnoreCase(selectedPlayer2)) {
+            //if not display error
+            error_lbl.setText("Please select two players or goalies");
+        } else {
+            //check the positions match
+            if (selectedPlayer1.contains("GK") && !selectedPlayer2.contains("GK") || !selectedPlayer1.contains("GK") && selectedPlayer2.contains("GK")) {
+                //if not display error
+                error_lbl.setText("Please select two players or goalies");
+            } else {
+                player1_lbl.setText(selectedPlayer1);
+                player2_lbl.setText(selectedPlayer2);
+                go_btn.setVisible(true);
+            }
+        }
+    }//GEN-LAST:event_player2_cmboItemStateChanged
+
+    private void compare_cmboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_compare_cmboItemStateChanged
+        //clear check boxes when new selection made
+        best_chk.setSelected(false);
+        worst_chk.setSelected(false);
+
+        if (compare_cmbo.getSelectedItem().equals("Compare")) {
+            best_chk.setEnabled(false);
+            worst_chk.setEnabled(false);
+        } else {
+            best_chk.setEnabled(true);
+            worst_chk.setEnabled(true);
+        }
+    }//GEN-LAST:event_compare_cmboItemStateChanged
+
+    public void compare(String selection) {
+        //get the values from the combo boxes
+        String valueToCompare = (String) compare_cmbo.getSelectedItem();
+        String selectedPlayer1 = (String) player1_cmbo.getSelectedItem();
+        String selectedPlayer2 = (String) player2_cmbo.getSelectedItem();
+        String chkPlayer1 = "";
+        String chkPlayer2 = "";
+
+        //get the goal keepers
+        if ((selectedPlayer1.contains("GK") && selectedPlayer2.contains("GK")) || selectedPlayer1.equals("All Keepers")) {
+            //get the key value for what we're comparing from the treeMap of values
+            for (Map.Entry<Integer, String> goalieValueEntry : goalieValues.entrySet()) {
+                if (goalieValueEntry.getValue().equalsIgnoreCase(valueToCompare)) {
+                    //save the value we found
+                    int goalieValueKey = goalieValueEntry.getKey();
+                    //check if all keepers are selected
+                    if (selectedPlayer1.equalsIgnoreCase("All Keepers")) {
+                        //if they are there is nothing to compare so sort table
+                        compareGoalieTable(goalieValueKey, selection);
+                        break; //nothing else to do so exit loop
+                    }
+                }
+            }
+        } else { //we are dealing with players only
+            //get the key value for what we're comparing from the treeMap of values
+            for (Map.Entry<Integer, String> playerValueEntry : playerValues.entrySet()) {
+                if (playerValueEntry.getValue().equalsIgnoreCase(valueToCompare)) {
+                    //save the value we found
+                    int playerValueKey = playerValueEntry.getKey();
+                    //check if all players are selected
+                    if (selectedPlayer1.equalsIgnoreCase("All Players")) {
+                        //if they are there is nothing to compare so sort table
+                        comparePlayerTable(playerValueKey, selection);
+                        break; //nothing else to do so exit loop
+                    }
+                    //loop through the player1 tree
+                    for (Map.Entry<Integer, TreeMap> playerEntry : allPlayerTree.entrySet()) {
+                        //find the player that matches the selected name
+                        if (playerEntry.getValue().containsValue(selectedPlayer1.substring(0, selectedPlayer1.length() - 3))) {
+                            //create a new treemap for the player
+                            TreeMap<Integer, String> player1Value = playerEntry.getValue();
+                            //loop through the player values until we find the matching key for the value
+                            for (Map.Entry<Integer, String> player1Entry : player1Value.entrySet()) {
+                                if (player1Entry.getKey().equals(playerValueKey)) {
+                                    //when we find a match save the key
+                                    int key = player1Entry.getKey();
+                                    //pass it into the compare method
+                                    comparePlayerTable(key, selection);
+                                    //save the value for comparason with player2
+                                    chkPlayer1 = player1Entry.getValue();
+                                }
+                            }
+                        }
+                        //loop through the tree until we find the details for player 2
+                        if (playerEntry.getValue().containsValue(selectedPlayer2.substring(0, selectedPlayer2.length() - 3))) {
+                            TreeMap<Integer, String> player2Value = playerEntry.getValue();
+                            for (Map.Entry<Integer, String> player2Entry : player2Value.entrySet()) {
+                                if (player2Entry.getKey().equals(playerValueKey)) {
+                                    int key = player2Entry.getKey();
+                                    comparePlayerTable(key, selection);
+                                    chkPlayer2 = player2Entry.getValue();
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (selection.equals("best")) {
+                        compareBest(chkPlayer1, chkPlayer2, playerValueKey);
+                        break;
+                    }
+                    if (selection.equals("worst")) {
+                        compareWorst(chkPlayer1, chkPlayer2, playerValueKey);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    public void compareBest(String chkPlayer1, String chkPlayer2, int playerValueKey) {
+        player1_result_lbl.setText("");
+        player2_result_lbl.setText("");
+        
+        //compare the two strings
+        int compare = chkPlayer1.compareToIgnoreCase(chkPlayer2);
+        //best values can be high or low so check based on the value chosen
+        if (playerValueKey == 0 || playerValueKey == 4 || playerValueKey == 5 || playerValueKey == 6 || playerValueKey == 7 || playerValueKey == 9 || playerValueKey == 10 || 
+                playerValueKey == 12 || playerValueKey == 13 || playerValueKey == 14) {
+            if (compare < 0) {
+                player2_result_lbl.setText(chkPlayer2);
+            } else {
+                player1_result_lbl.setText(chkPlayer1);
+                
+            }
+        } else {
+            if (compare > 0) {
+                player2_result_lbl.setText(chkPlayer2);
+            } else {
+                player1_result_lbl.setText(chkPlayer1);
+                
+            }
+        }
+    }
+ 
+    public void compareWorst(String chkPlayer1, String chkPlayer2, int playerValueKey) {
+        player1_result_lbl.setText("");
+        player2_result_lbl.setText("");
+        
+        //compare the two strings
+        int compare = chkPlayer1.compareToIgnoreCase(chkPlayer2);
+        //worst values can be high or low so check based on the value chosen
+        if (playerValueKey == 0 || playerValueKey == 4 || playerValueKey == 5 || playerValueKey == 6 || playerValueKey == 7 || playerValueKey == 9 || playerValueKey == 10 || 
+                playerValueKey == 12 || playerValueKey == 13 || playerValueKey == 14) {
+            if (compare > 0) {
+                player2_result_lbl.setText(chkPlayer2);
+            } else {
+                player1_result_lbl.setText(chkPlayer1);
+            }
+        } else {
+            if (compare < 0) {
+                player2_result_lbl.setText(chkPlayer2);
+            } else {
+                player1_result_lbl.setText(chkPlayer1);
+            }
+        }
+    }
+    
+    private void best_chkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_best_chkMouseClicked
+        //clear previous results
+        player1_result_lbl.setText("");
+        player2_result_lbl.setText("");
+        worst_chk.setSelected(false);
+        best_chk.setSelected(true);
+
+        String selection = "best";
+        compare(selection);
+    }//GEN-LAST:event_best_chkMouseClicked
+
+    private void worst_chkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_worst_chkMouseClicked
+        //clear previous results
+        player1_result_lbl.setText("");
+        player2_result_lbl.setText("");
+        best_chk.setSelected(false);
+        worst_chk.setSelected(true);
+
+        String selection = "worst";
+        compare(selection);
+    }//GEN-LAST:event_worst_chkMouseClicked
+
+    private void menu_title_holderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menu_title_holderMouseClicked
+        //create new instance of home ui    
+        HomeUI homeUI = new HomeUI();
+        //close this view
+        this.dispose();
+        //open the home view & set it to visible
+        homeUI.setVisible(true);
+    }//GEN-LAST:event_menu_title_holderMouseClicked
+
+    private void clear_btnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clear_btnMouseClicked
+        //clear the table
+        DefaultTableModel playertableModel = (DefaultTableModel) player_tbl.getModel();
+        playertableModel.setRowCount(0);
+        DefaultTableModel goalieTableModel = (DefaultTableModel) goalie_tbl.getModel();
+        goalieTableModel.setRowCount(0);
+        
+        player1_result_lbl.setText("");
+        player2_result_lbl.setText("");
+        player1_lbl.setText("");
+        player2_lbl.setText("");
+        
+        best_chk.setSelected(false);
+        worst_chk.setSelected(false);
+    }//GEN-LAST:event_clear_btnMouseClicked
+
+    public void compareGoalieTable(int key, String selection) {
+        player_tbl.setVisible(false);
+        
+        DefaultTableModel goalieTableModel = (DefaultTableModel) goalie_tbl.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(goalieTableModel);
+        goalie_tbl.setRowSorter(sorter);
+
+        List<TableRowSorter.SortKey> sortKeys = new ArrayList<>();
+        if (selection.equals("best")) {
+            if (key == 1 || key == 2 || key == 3 || key == 6 || key == 8 || key == 9 || key == 14) {
+                sortKeys.add(new TableRowSorter.SortKey(key, SortOrder.DESCENDING));
+            } else {
+                sortKeys.add(new TableRowSorter.SortKey(key, SortOrder.ASCENDING));
+            }
+        }
+        if (selection.equals("worst")) {
+            if (key == 1 || key == 2 || key == 3 || key == 6 || key == 8 || key == 9 || key == 14) {
+                sortKeys.add(new TableRowSorter.SortKey(key, SortOrder.ASCENDING));
+            } else {
+                sortKeys.add(new TableRowSorter.SortKey(key, SortOrder.DESCENDING));
+            }
+        }
+        sorter.setSortKeys(sortKeys);
+        goalie_tbl.getRowSorter().toggleSortOrder(key);
+    }
+
+    public void comparePlayerTable(int key, String selection) {
+        goalie_tbl.setVisible(false);
+        
+        DefaultTableModel playerTableModel = (DefaultTableModel) player_tbl.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(playerTableModel);
+        player_tbl.setRowSorter(sorter);
+
+        List<TableRowSorter.SortKey> sortKeys = new ArrayList<>();
+        if (selection.equals("best")) {
+            if (key == 0 || key == 4 || key == 5 || key == 6 || key == 7 || key == 9 || key == 10 || key == 12 || key == 13 || key == 14) {
+                sortKeys.add(new TableRowSorter.SortKey(key, SortOrder.ASCENDING));
+            } else {
+                sortKeys.add(new TableRowSorter.SortKey(key, SortOrder.DESCENDING));
+            }
+        }
+        if (selection.equals("worst")) {
+            if (key == 0 || key == 4 || key == 5 || key == 6 || key == 7 || key == 9 || key == 10 || key == 12 || key == 13 || key == 14) {
+                sortKeys.add(new TableRowSorter.SortKey(key, SortOrder.DESCENDING));
+            } else {
+                sortKeys.add(new TableRowSorter.SortKey(key, SortOrder.ASCENDING));
+            }
+        }
+        sorter.setSortKeys(sortKeys);
+        player_tbl.getRowSorter().toggleSortOrder(key);
+    }
+
+    public void populatePlayerTable(DefaultTableModel tableModel, int key) {
+        goalie_scroll_panel.setVisible(false);
+        Object[] playerData = new Object[15];
+        playerData[0] = playerMap.get(key).getNumber();
+        playerData[1] = playerMap.get(key).getPlayerName();
+        playerData[2] = playerMap.get(key).getTeamName();
+        playerData[3] = playerMap.get(key).getPosition();
+        playerData[4] = playerMap.get(key).getGamesPlayed();
+        playerData[5] = playerMap.get(key).getGoals();
+        playerData[6] = playerMap.get(key).getAssists();
+        playerData[7] = playerMap.get(key).getPoints();
+        playerData[8] = playerMap.get(key).getPenaltyMinutes();
+        playerData[9] = playerMap.get(key).getPowerPlayGoals();
+        playerData[10] = playerMap.get(key).getShorthandedGoals();
+        playerData[11] = playerMap.get(key).getShotsOnGoal();
+        playerData[12] = playerMap.get(key).getTotalShots();
+        playerData[13] = playerMap.get(key).getFaceoffWins();
+        playerData[14] = playerMap.get(key).getFaceoffLost();
+
+        tableModel.addRow(playerData);
+    }
+
+    public void populateGoalieTable(DefaultTableModel tableModel, int key) {
+        player_scroll_panel.setVisible(false);
+        
+        Object[] goalieData = new Object[13];
+        goalieData[0] = playerMap.get(key).getNumber();
+        goalieData[1] = playerMap.get(key).getPlayerName();
+        goalieData[2] = playerMap.get(key).getTeamName();
+        goalieData[3] = playerMap.get(key).getPosition();
+        goalieData[4] = playerMap.get(key).getGamesPlayed();
+        goalieData[5] = playerMap.get(key).getWins();
+        goalieData[6] = playerMap.get(key).getLoses();
+        goalieData[7] = playerMap.get(key).getShutouts();
+        goalieData[8] = playerMap.get(key).getShotsAgainst();
+        goalieData[9] = playerMap.get(key).getGoalsAgainst();
+        goalieData[10] = playerMap.get(key).getMinutesPlayed();
+        goalieData[11] = playerMap.get(key).getAvgGoalsAgainst();
+        goalieData[12] = playerMap.get(key).getSavePct();
+
+        tableModel.addRow(goalieData);
+    }
 
     /**
      * @param args the command line arguments
@@ -414,17 +1223,38 @@ public class PlayersUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox best_chk;
+    private javax.swing.JButton clear_btn;
+    private javax.swing.JComboBox<String> compare_cmbo;
+    private javax.swing.JPanel comparison_panel;
+    private javax.swing.JLabel error_lbl;
+    private javax.swing.JButton go_btn;
+    private javax.swing.JScrollPane goalie_scroll_panel;
+    private javax.swing.JTable goalie_tbl;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel left_panel;
     private javax.swing.JPanel logo_holder;
     private javax.swing.JPanel menu_holder;
     private javax.swing.JPanel menu_title_holder;
+    private javax.swing.JComboBox<String> player1_cmbo;
+    private javax.swing.JLabel player1_lbl;
+    private javax.swing.JPanel player1_panel;
+    private javax.swing.JLabel player1_result_lbl;
+    private javax.swing.JComboBox<String> player2_cmbo;
+    private javax.swing.JLabel player2_lbl;
+    private javax.swing.JPanel player2_panel;
+    private javax.swing.JLabel player2_result_lbl;
+    private javax.swing.JScrollPane player_scroll_panel;
+    private javax.swing.JTable player_tbl;
     private javax.swing.JPanel players_holder;
     private javax.swing.JRadioButton players_rdo;
     private javax.swing.JPanel right_panel;
@@ -434,5 +1264,8 @@ public class PlayersUI extends javax.swing.JFrame {
     private javax.swing.JPanel shadow_btn3;
     private javax.swing.JPanel teams_btn;
     private javax.swing.JRadioButton teams_rdo;
+    private javax.swing.JPanel top_panel;
+    private javax.swing.JCheckBox worst_chk;
     // End of variables declaration//GEN-END:variables
+
 }

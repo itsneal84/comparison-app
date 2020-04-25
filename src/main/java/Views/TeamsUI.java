@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import javax.swing.JComboBox;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
@@ -32,11 +31,6 @@ public class TeamsUI extends javax.swing.JFrame {
         allTeamsTreeMap = teamHash.AllTeamsTree();
 
         initComponents();
-
-        teams = teamHash.AllTeamsArray();
-
-        JComboBox teams_cmbo = new JComboBox(teams);
-        menu_holder.add(teams_cmbo);
 
         comp_cmbo.setVisible(false);
         best_chk.setVisible(false);
@@ -113,6 +107,11 @@ public class TeamsUI extends javax.swing.JFrame {
         menu_title_holder.setBackground(new java.awt.Color(3, 22, 52));
         menu_title_holder.setMaximumSize(new java.awt.Dimension(300, 80));
         menu_title_holder.setMinimumSize(new java.awt.Dimension(300, 80));
+        menu_title_holder.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menu_title_holderMouseClicked(evt);
+            }
+        });
 
         compare_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/compare.png"))); // NOI18N
 
@@ -231,8 +230,8 @@ public class TeamsUI extends javax.swing.JFrame {
 
         players_holder.setBackground(teams_btn.getBackground());
         players_holder.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                players_holderMousePressed(evt);
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                players_holderMouseClicked(evt);
             }
         });
 
@@ -433,7 +432,7 @@ public class TeamsUI extends javax.swing.JFrame {
                     .addGroup(team1_holderLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(team1_result_lbl)))
-                .addGap(0, 44, Short.MAX_VALUE))
+                .addGap(0, 135, Short.MAX_VALUE))
         );
         team1_holderLayout.setVerticalGroup(
             team1_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -527,6 +526,11 @@ public class TeamsUI extends javax.swing.JFrame {
 
         worst_chk.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         worst_chk.setText("worst");
+        worst_chk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                worst_chkMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout comparison_holderLayout = new javax.swing.GroupLayout(comparison_holder);
         comparison_holder.setLayout(comparison_holderLayout);
@@ -539,7 +543,7 @@ public class TeamsUI extends javax.swing.JFrame {
                 .addComponent(best_chk, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(worst_chk)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(263, Short.MAX_VALUE))
         );
         comparison_holderLayout.setVerticalGroup(
             comparison_holderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -559,7 +563,7 @@ public class TeamsUI extends javax.swing.JFrame {
             top_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(top_panelLayout.createSequentialGroup()
                 .addComponent(team1_holder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(team2_holder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(comparison_holder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -575,9 +579,10 @@ public class TeamsUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jScrollPane1.setMaximumSize(new java.awt.Dimension(700, 800));
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(700, 700));
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(700, 800));
+        jScrollPane1.setFont(new java.awt.Font("Calibri", 0, 11)); // NOI18N
+        jScrollPane1.setMaximumSize(new java.awt.Dimension(700, 500));
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(700, 500));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(700, 500));
 
         teams_tbl.setBackground(right_panel.getBackground());
         teams_tbl.setModel(new javax.swing.table.DefaultTableModel(
@@ -607,6 +612,7 @@ public class TeamsUI extends javax.swing.JFrame {
         teams_tbl.setAlignmentY(0.0F);
         jScrollPane1.setViewportView(teams_tbl);
 
+        clear_btn.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         clear_btn.setText("clear");
         clear_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -622,7 +628,7 @@ public class TeamsUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(right_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(top_panel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1160, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1160, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, right_panelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(clear_btn)))
@@ -633,10 +639,10 @@ public class TeamsUI extends javax.swing.JFrame {
             .addGroup(right_panelLayout.createSequentialGroup()
                 .addComponent(top_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 613, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(clear_btn)
-                .addGap(0, 153, Short.MAX_VALUE))
+                .addGap(0, 262, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -670,15 +676,6 @@ public class TeamsUI extends javax.swing.JFrame {
         playersUI.setVisible(true);
     }//GEN-LAST:event_players_rdoActionPerformed
 
-    private void players_holderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_players_holderMousePressed
-        //create new instance of teams ui    
-        PlayersUI playersUI = new PlayersUI();
-        //close this view
-        this.dispose();
-        //open the teams view & set it to visible
-        playersUI.setVisible(true);
-    }//GEN-LAST:event_players_holderMousePressed
-
     private void go_btnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_go_btnMouseClicked
         //get the selected team from both combo boxes
         String selectedTeam1 = (String)team1_cmbo.getSelectedItem();
@@ -686,7 +683,11 @@ public class TeamsUI extends javax.swing.JFrame {
         DefaultTableModel tableModel = (DefaultTableModel) teams_tbl.getModel();
         
         if (selectedTeam1 != "All Teams" && (selectedTeam1.equalsIgnoreCase("Select Team1") || selectedTeam2.equalsIgnoreCase("Select Team2"))) {
-                error_lbl.setText("Please select a team");
+                error_lbl.setText("Please select more than 1 team");
+        }
+                //make sure the teams selected are different
+        if(selectedTeam1.equals(selectedTeam2)){
+            error_lbl.setText("Error: please select different teams");
         }else{
             //set comparison options to visible
             comp_cmbo.setVisible(true);
@@ -710,6 +711,7 @@ public class TeamsUI extends javax.swing.JFrame {
                 if (selectedTeam1.equalsIgnoreCase("All Teams")) {
                     int k = entry.getKey();
                     populateTable(tableModel, k);
+                    
                 }
             }
         }    
@@ -745,6 +747,10 @@ public class TeamsUI extends javax.swing.JFrame {
     }
     
     private void team1_cmboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_team1_cmboItemStateChanged
+        //clear previous errors & selections
+        error_lbl.setText("");
+        team1_lbl.setText("");
+        
         String selectedTeam = (String)team1_cmbo.getSelectedItem();
         
         //check if the selected team is all
@@ -753,6 +759,8 @@ public class TeamsUI extends javax.swing.JFrame {
             team2_cmbo.setVisible(false);
             team1_lbl.setText(selectedTeam);
             team2_title_lbl.setVisible(false);
+            team2_lbl.setText("");
+            result2_lbl.setVisible(false);
         }
         else{
             //if not we do
@@ -763,13 +771,12 @@ public class TeamsUI extends javax.swing.JFrame {
     }//GEN-LAST:event_team1_cmboItemStateChanged
 
     private void team2_cmboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_team2_cmboItemStateChanged
+        //clear previous errors & selections
+        error_lbl.setText("");
+        team2_lbl.setText("");
+        
         String selectedTeam1 = (String)team1_cmbo.getSelectedItem();
         String selectedTeam2 = (String)team2_cmbo.getSelectedItem();
-        
-        //make sure the teams selected are different
-        if(selectedTeam1.equals(selectedTeam2)){
-            error_lbl.setText("Error: please select different teams");
-        }
         
         team2_lbl.setText(selectedTeam2);
     }//GEN-LAST:event_team2_cmboItemStateChanged
@@ -784,7 +791,14 @@ public class TeamsUI extends javax.swing.JFrame {
         //clear previous results
         team1_result_lbl.setText("");
         team2_result_lbl.setText("");
+        worst_chk.setSelected(false);
+        best_chk.setSelected(true);
 
+        String selection = "best";
+        compare(selection);
+    }//GEN-LAST:event_best_chkMouseClicked
+
+    public void compare(String selection){
         //get the values from the combo boxes
         String valueToCompare = (String)comp_cmbo.getSelectedItem();
         String selectedTeam1 = (String)team1_cmbo.getSelectedItem();
@@ -800,7 +814,7 @@ public class TeamsUI extends javax.swing.JFrame {
                 //check if all teams are selected
                 if (selectedTeam1.equalsIgnoreCase("All Teams")) {
                     //if they are there is nothing to compare so sort table
-                    CompareTable(teamValueKey);
+                    CompareTable(teamValueKey, selection);
                     break; //nothing else to do so exit loop
                 }
                 //get the team that matches the first selected
@@ -811,7 +825,7 @@ public class TeamsUI extends javax.swing.JFrame {
                         for (Map.Entry<Integer, String> team1Entry : team1Value.entrySet()) {
                             if (team1Entry.getKey().equals(teamValueKey)) {
                                 int key = team1Entry.getKey();
-                                CompareTable(key);
+                                CompareTable(key, selection);
                                 chkTeam1 = team1Entry.getValue();
                             }
                         }
@@ -822,78 +836,90 @@ public class TeamsUI extends javax.swing.JFrame {
                         for (Map.Entry<Integer, String> team2Entry : team2Value.entrySet()) {
                             if (team2Entry.getKey().equals(teamValueKey)) {
                                 int key = team2Entry.getKey();
-                                CompareTable(key);
+                                CompareTable(key, selection);
                                 chkTeam2 = team2Entry.getValue();
                             }
                         }
                     }
                 }
-                double chkTeam1Result = Double.parseDouble(chkTeam1);
-                double chkTeam2Result = Double.parseDouble(chkTeam2);
+                //compare the two strings
+                int compare = chkTeam1.compareToIgnoreCase(chkTeam2);
                 //use key to record which reult is better (higher or lower)
                 if (teamValueKey == 1 || teamValueKey == 2 || teamValueKey == 4 || teamValueKey == 6 || teamValueKey == 7 || teamValueKey == 8 || teamValueKey == 10
                         || teamValueKey == 13 || teamValueKey == 14 || teamValueKey == 16 || teamValueKey == 17 || teamValueKey == 18 || teamValueKey == 19
                         || teamValueKey == 20 || teamValueKey == 21) {
-                    if (chkTeam1Result > chkTeam2Result) {
+                    if (compare < 0) {
                         team1_result_lbl.setText(chkTeam1);
                     }
                 } else {
-                    if (chkTeam1Result > chkTeam2Result) {
+                    if (compare > 0) {
                         team2_result_lbl.setText(chkTeam2);
                     }
                 }
             }
         }
-    }//GEN-LAST:event_best_chkMouseClicked
-
-    private void CompareTable(int key){
+    }
+    private void CompareTable(int key, String selection){
         DefaultTableModel tableModel = (DefaultTableModel) teams_tbl.getModel();
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
         teams_tbl.setRowSorter(sorter);
-        
-        List<RowSorter.SortKey>sortKeys = new ArrayList<>();
-        if(key == 1 || key == 2 || key == 4 || key == 6 || key == 7 || key == 8 || key == 10 || key == 13 || key == 14
-                || key == 16 || key == 17 || key == 18 || key == 19 || key == 20 || key == 21){
-            sortKeys.add(new RowSorter.SortKey(key, SortOrder.ASCENDING));
+
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+
+        if (selection.equals("best")) {
+            if (key == 1 || key == 2 || key == 4 || key == 6 || key == 7 || key == 8 || key == 10 || key == 13 || key == 14
+                    || key == 16 || key == 17 || key == 18 || key == 19 || key == 20 || key == 21) {
+                sortKeys.add(new RowSorter.SortKey(key, SortOrder.ASCENDING));
+            } else {
+                sortKeys.add(new RowSorter.SortKey(key, SortOrder.DESCENDING));
+            }
         }
-        else{
-            sortKeys.add(new RowSorter.SortKey(key, SortOrder.DESCENDING));
+        if (selection.equals("worst")) {
+            if (key == 1 || key == 2 || key == 4 || key == 6 || key == 7 || key == 8 || key == 10 || key == 13 || key == 14
+                    || key == 16 || key == 17 || key == 18 || key == 19 || key == 20 || key == 21) {
+                sortKeys.add(new RowSorter.SortKey(key, SortOrder.DESCENDING));
+            } else {
+                sortKeys.add(new RowSorter.SortKey(key, SortOrder.ASCENDING));
+            }
         }
+
         sorter.setSortKeys(sortKeys);
         teams_tbl.getRowSorter().toggleSortOrder(key);
-    }
-    public void getHashValues(){
-
-//        Object[] teamData = new Object[21];
-//        teamData[0] = teamMap.get(k).getTeamName();
-//        teamData[1] = teamMap.get(k).getGamesPlayed();
-//        teamData[2] = teamMap.get(k).getWins();
-//        teamData[3] = teamMap.get(k).getLosses();
-//        teamData[4] = teamMap.get(k).getOvertimeWins();
-//        teamData[5] = teamMap.get(k).getOvertimeLosses();
-//        teamData[6] = teamMap.get(k).getWinPct();
-//        teamData[7] = teamMap.get(k).getPoints();
-//        teamData[8] = teamMap.get(k).getGoalsScored();
-//        teamData[9] = teamMap.get(k).getGoalsAgainst();
-//        teamData[10] = teamMap.get(k).getAvgGoalsFor();
-//        teamData[11] = teamMap.get(k).getAvgGoalsAgainst();
-//        teamData[12] = teamMap.get(k).getAvgAttendance();
-//        teamData[13] = teamMap.get(k).getShotsOnGoalFor();
-//        teamData[14] = teamMap.get(k).getShotsOnGoalAgainst();
-//        teamData[15] = teamMap.get(k).getFaceoffWinPct();
-//        teamData[16] = teamMap.get(k).getFaceoffWinTotal();
-//        teamData[17] = teamMap.get(k).getPowerplayPct();
-//        teamData[18] = teamMap.get(k).getPowerplayTotal();
-//        teamData[19] = teamMap.get(k).getPenaltyKillsPct();
-//        teamData[20] = teamMap.get(k).getPenaltyKillsTotal();
-//        
-//        return value;
     }
     
     private void comp_cmboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comp_cmboItemStateChanged
         best_chk.setSelected(false);
         worst_chk.setSelected(false);
     }//GEN-LAST:event_comp_cmboItemStateChanged
+
+    private void players_holderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_players_holderMouseClicked
+        //create new instance of players ui    
+        PlayersUI playersUI = new PlayersUI();
+        //close this view
+        this.dispose();
+        //open the teams view & set it to visible
+        playersUI.setVisible(true);
+    }//GEN-LAST:event_players_holderMouseClicked
+
+    private void menu_title_holderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menu_title_holderMouseClicked
+        //create new instance of home ui    
+        HomeUI homeUI = new HomeUI();
+        //close this view
+        this.dispose();
+        //open the home view & set it to visible
+        homeUI.setVisible(true);
+    }//GEN-LAST:event_menu_title_holderMouseClicked
+
+    private void worst_chkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_worst_chkMouseClicked
+        //clear previous results
+        team1_result_lbl.setText("");
+        team2_result_lbl.setText("");
+        worst_chk.setSelected(true);
+        best_chk.setSelected(false);
+
+        String selection = "worst";
+        compare(selection);
+    }//GEN-LAST:event_worst_chkMouseClicked
 
     /**
      * @param args the command line arguments

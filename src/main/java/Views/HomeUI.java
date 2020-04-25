@@ -2,7 +2,7 @@ package Views;
 
 /**
  *
- * @author niz66
+ * @author Neal Nisbet B00380762
  */
 public class HomeUI extends javax.swing.JFrame {
     /**
@@ -173,8 +173,8 @@ public class HomeUI extends javax.swing.JFrame {
         players_holder.setMinimumSize(new java.awt.Dimension(300, 80));
         players_holder.setPreferredSize(new java.awt.Dimension(300, 80));
         players_holder.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                players_holderMousePressed(evt);
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                players_holderMouseClicked(evt);
             }
         });
 
@@ -393,14 +393,14 @@ public class HomeUI extends javax.swing.JFrame {
         teamsUI.setVisible(true);
     }//GEN-LAST:event_teams_btnMouseClicked
 
-    private void players_holderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_players_holderMousePressed
+    private void players_holderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_players_holderMouseClicked
         //create new instance of players ui    
         PlayersUI playersUI = new PlayersUI();
         //close this view
         this.dispose();
         //open the teams view & set it to visible
         playersUI.setVisible(true);
-    }//GEN-LAST:event_players_holderMousePressed
+    }//GEN-LAST:event_players_holderMouseClicked
 
     /**
      * @param args the command line arguments
