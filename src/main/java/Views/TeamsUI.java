@@ -498,7 +498,7 @@ public class TeamsUI extends javax.swing.JFrame {
 
         comp_cmbo.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         comp_cmbo.setForeground(new java.awt.Color(3, 22, 52));
-        comp_cmbo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Compare", "Games played", "Wins", "Losses", "Overtime wins", "Overtime losses", "Win %", "Points", "Goals scored", "Goals against", "Goals For average", "Goals Againts average", "Average attendance", "Shots on goal for", "Shots on goal against", "Face-offs won %", "Face-offs won Total", "Powerplay %", "Powerplay Total", "Penalty killing %", "Penalty killing Total" }));
+        comp_cmbo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Compare", "Games played", "Wins", "Losses", "Overtime Wins", "Overtime Losses", "Win %", "Points", "Goals Scored", "Goals Against", "Avg Goals For", "Avg Goals Against", "Avg Attendance", "Shots on Goal For", "Shots on Goal Against", "Faceoff Win %", "Faceoff Win Total", "Powerplay Win %", "Powerplay Total", "Penalty Kills %", "Penalty Kills Total" }));
         comp_cmbo.setMaximumSize(new java.awt.Dimension(200, 30));
         comp_cmbo.setMinimumSize(new java.awt.Dimension(200, 30));
         comp_cmbo.setPreferredSize(new java.awt.Dimension(200, 30));
@@ -590,7 +590,7 @@ public class TeamsUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Team Name", "Games played ", "Wins", "Losses", "O/T Wins", "O/T Losses", "Win %", "Points", "Goals Scored", "Goals Against", "Avg Goals For", "Avg Goals Against", "Avg Attendance", "Shots on Goal For", "Shots on Goal Against", "Face off Win %", "Face off Total", "Power Play Win %", "Power Play Total", "Penalty Kills %", "Penalty Kills Total"
+                "Team Name", "Games played ", "Wins", "Losses", "Overtime Wins", "Overtime Losses", "Win %", "Points", "Goals Scored", "Goals Against", "Avg Goals For", "Avg Goals Against", "Avg Attendance", "Shots on Goal For", "Shots on Goal Against", "Face off Win %", "Face off Win Total", "Power Play Win %", "Power Play Total", "Penalty Kills %", "Penalty Kills Total"
             }
         ) {
             Class[] types = new Class [] {
@@ -785,6 +785,18 @@ public class TeamsUI extends javax.swing.JFrame {
         //clear the table
         DefaultTableModel tableModel = (DefaultTableModel) teams_tbl.getModel();
         tableModel.setRowCount(0);
+        //clear label text
+        team1_result_lbl.setText("");
+        team2_result_lbl.setText("");
+        team1_lbl.setText("");
+        team2_lbl.setText("");
+        //clear check boxes
+        best_chk.setSelected(false);
+        worst_chk.setSelected(false);
+        //reset combo boxes to default state
+        team1_cmbo.setSelectedIndex(0);
+        team2_cmbo.setSelectedIndex(0);
+        comp_cmbo.setSelectedIndex(0);
     }//GEN-LAST:event_clear_btnMouseClicked
 
     private void best_chkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_best_chkMouseClicked
@@ -842,24 +854,59 @@ public class TeamsUI extends javax.swing.JFrame {
                         }
                     }
                 }
-                //compare the two strings
-                int compare = chkTeam1.compareToIgnoreCase(chkTeam2);
-                //use key to record which reult is better (higher or lower)
-                if (teamValueKey == 1 || teamValueKey == 2 || teamValueKey == 4 || teamValueKey == 6 || teamValueKey == 7 || teamValueKey == 8 || teamValueKey == 10
-                        || teamValueKey == 13 || teamValueKey == 14 || teamValueKey == 16 || teamValueKey == 17 || teamValueKey == 18 || teamValueKey == 19
-                        || teamValueKey == 20 || teamValueKey == 21) {
-                    if (compare < 0) {
-                        team1_result_lbl.setText(chkTeam1);
-                    }
-                } else {
-                    if (compare > 0) {
-                        team2_result_lbl.setText(chkTeam2);
-                    }
+                if (selection.equals("best")) {
+                    compareBest(chkTeam1, chkTeam2, teamValueKey);
+                }
+                if (selection.equals("worst")) {
+                    compareWorst(chkTeam1, chkTeam2, teamValueKey);
                 }
             }
         }
     }
-    private void CompareTable(int key, String selection){
+
+    public void compareBest(String chkTeam1, String chkTeam2, int teamValueKey) {
+        //compare the two strings
+        int compare = chkTeam1.compareToIgnoreCase(chkTeam2);
+        //use key to record which reult is better (higher or lower)
+        if (teamValueKey == 1 || teamValueKey == 2 || teamValueKey == 4 || teamValueKey == 6 || teamValueKey == 7 || teamValueKey == 8 || teamValueKey == 9
+                || teamValueKey == 13 || teamValueKey == 14 || teamValueKey == 16 || teamValueKey == 17 || teamValueKey == 18 || teamValueKey == 19
+                || teamValueKey == 20 || teamValueKey == 21) {
+            if (compare > 0) {
+                team1_result_lbl.setText(chkTeam1);
+            }else{
+                team2_result_lbl.setText(chkTeam2);
+            }
+        } else {
+            if (compare < 0) {
+                team2_result_lbl.setText(chkTeam2);
+            }else{
+                team1_result_lbl.setText(chkTeam1);
+            }
+        }
+    }
+
+    public void compareWorst(String chkTeam1, String chkTeam2, int teamValueKey) {
+        //compare the two strings
+        int compare = chkTeam1.compareToIgnoreCase(chkTeam2);
+        //use key to record which reult is better (higher or lower)
+        if (teamValueKey == 1 || teamValueKey == 2 || teamValueKey == 4 || teamValueKey == 6 || teamValueKey == 7 || teamValueKey == 8 || teamValueKey == 9
+                || teamValueKey == 13 || teamValueKey == 14 || teamValueKey == 16 || teamValueKey == 17 || teamValueKey == 18 || teamValueKey == 19
+                || teamValueKey == 20 || teamValueKey == 21) {
+            if (compare < 0) {
+                team1_result_lbl.setText(chkTeam1);
+            }else{
+                team2_result_lbl.setText(chkTeam2);
+            }
+        } else {
+            if (compare > 0) {
+                team2_result_lbl.setText(chkTeam2);
+            }else{
+                team1_result_lbl.setText(chkTeam1);
+            }
+        }
+    }
+
+    private void CompareTable(int key, String selection) {
         DefaultTableModel tableModel = (DefaultTableModel) teams_tbl.getModel();
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
         teams_tbl.setRowSorter(sorter);

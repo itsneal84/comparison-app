@@ -230,7 +230,7 @@ public class Team {
         allValues.put(14, "Shots On Goal Against");
         allValues.put(15, "Faceoff Win %");
         allValues.put(16, "Faceoff Win Total");
-        allValues.put(17, "Powerplay %");
+        allValues.put(17, "Powerplay Win %");
         allValues.put(18, "Powerplay Total");
         allValues.put(19, "Penalty Kills %");
         allValues.put(20, "Penalty Kills Total");

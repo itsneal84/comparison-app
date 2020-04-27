@@ -897,23 +897,23 @@
                         <StringItem index="1" value="Games played"/>
                         <StringItem index="2" value="Wins"/>
                         <StringItem index="3" value="Losses"/>
-                        <StringItem index="4" value="Overtime wins"/>
-                        <StringItem index="5" value="Overtime losses"/>
+                        <StringItem index="4" value="Overtime Wins"/>
+                        <StringItem index="5" value="Overtime Losses"/>
                         <StringItem index="6" value="Win %"/>
                         <StringItem index="7" value="Points"/>
-                        <StringItem index="8" value="Goals scored"/>
-                        <StringItem index="9" value="Goals against"/>
-                        <StringItem index="10" value="Goals For average"/>
-                        <StringItem index="11" value="Goals Againts average"/>
-                        <StringItem index="12" value="Average attendance"/>
-                        <StringItem index="13" value="Shots on goal for"/>
-                        <StringItem index="14" value="Shots on goal against"/>
-                        <StringItem index="15" value="Face-offs won %"/>
-                        <StringItem index="16" value="Face-offs won Total"/>
-                        <StringItem index="17" value="Powerplay %"/>
+                        <StringItem index="8" value="Goals Scored"/>
+                        <StringItem index="9" value="Goals Against"/>
+                        <StringItem index="10" value="Avg Goals For"/>
+                        <StringItem index="11" value="Avg Goals Against"/>
+                        <StringItem index="12" value="Avg Attendance"/>
+                        <StringItem index="13" value="Shots on Goal For"/>
+                        <StringItem index="14" value="Shots on Goal Against"/>
+                        <StringItem index="15" value="Faceoff Win %"/>
+                        <StringItem index="16" value="Faceoff Win Total"/>
+                        <StringItem index="17" value="Powerplay Win %"/>
                         <StringItem index="18" value="Powerplay Total"/>
-                        <StringItem index="19" value="Penalty killing %"/>
-                        <StringItem index="20" value="Penalty killing Total"/>
+                        <StringItem index="19" value="Penalty Kills %"/>
+                        <StringItem index="20" value="Penalty Kills Total"/>
                       </StringArray>
                     </Property>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -1004,8 +1004,8 @@
                     <Column editable="false" title="Games played " type="java.lang.Integer"/>
                     <Column editable="false" title="Wins" type="java.lang.Integer"/>
                     <Column editable="false" title="Losses" type="java.lang.Integer"/>
-                    <Column editable="false" title="O/T Wins" type="java.lang.Integer"/>
-                    <Column editable="false" title="O/T Losses" type="java.lang.Integer"/>
+                    <Column editable="false" title="Overtime Wins" type="java.lang.Integer"/>
+                    <Column editable="false" title="Overtime Losses" type="java.lang.Integer"/>
                     <Column editable="false" title="Win %" type="java.lang.Double"/>
                     <Column editable="false" title="Points" type="java.lang.Integer"/>
                     <Column editable="false" title="Goals Scored" type="java.lang.Integer"/>
@@ -1016,7 +1016,7 @@
                     <Column editable="false" title="Shots on Goal For" type="java.lang.Integer"/>
                     <Column editable="false" title="Shots on Goal Against" type="java.lang.Integer"/>
                     <Column editable="false" title="Face off Win %" type="java.lang.Double"/>
-                    <Column editable="false" title="Face off Total" type="java.lang.Integer"/>
+                    <Column editable="false" title="Face off Win Total" type="java.lang.Integer"/>
                     <Column editable="false" title="Power Play Win %" type="java.lang.Double"/>
                     <Column editable="false" title="Power Play Total" type="java.lang.Integer"/>
                     <Column editable="false" title="Penalty Kills %" type="java.lang.Double"/>

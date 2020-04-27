@@ -834,8 +834,6 @@ public class PlayersUI extends javax.swing.JFrame {
             error_lbl.setText("Please select a player");
         } else {
             error_lbl.setText("");
-            player1_panel.setVisible(true);
-            player2_panel.setVisible(true);
             comparison_panel.setVisible(true);
             if (selectedPlayer1.contains("GK") || selectedPlayer1.equals("All Keepers")) {
                 goalie_tbl.setVisible(true);
@@ -900,6 +898,8 @@ public class PlayersUI extends javax.swing.JFrame {
                 player1_lbl.setText(selectedPlayer1);
                 player2_lbl.setText(selectedPlayer2);
                 go_btn.setVisible(true);
+                player1_panel.setVisible(true);
+                player2_panel.setVisible(true);
             }
         }
     }//GEN-LAST:event_player2_cmboItemStateChanged
@@ -928,119 +928,202 @@ public class PlayersUI extends javax.swing.JFrame {
 
         //get the goal keepers
         if ((selectedPlayer1.contains("GK") && selectedPlayer2.contains("GK")) || selectedPlayer1.equals("All Keepers")) {
-            //get the key value for what we're comparing from the treeMap of values
-            for (Map.Entry<Integer, String> goalieValueEntry : goalieValues.entrySet()) {
-                if (goalieValueEntry.getValue().equalsIgnoreCase(valueToCompare)) {
-                    //save the value we found
-                    int goalieValueKey = goalieValueEntry.getKey();
-                    //check if all keepers are selected
-                    if (selectedPlayer1.equalsIgnoreCase("All Keepers")) {
-                        //if they are there is nothing to compare so sort table
-                        compareGoalieTable(goalieValueKey, selection);
-                        break; //nothing else to do so exit loop
+            getKeeper(valueToCompare, selectedPlayer1, selection, chkPlayer1, selectedPlayer2, chkPlayer2);
+        } else { 
+            getPlayers(valueToCompare, selectedPlayer1, selection, chkPlayer1, selectedPlayer2, chkPlayer2);
+        }
+    }
+
+    public void getPlayers(String valueToCompare, String selectedPlayer1, String selection, String chkPlayer1, String selectedPlayer2, String chkPlayer2) {
+        //we are dealing with players only
+        String position = "player";
+        //get the key value for what we're comparing from the treeMap of values
+        for (Map.Entry<Integer, String> playerValueEntry : playerValues.entrySet()) {
+            if (playerValueEntry.getValue().equalsIgnoreCase(valueToCompare)) {
+                //save the value we found
+                int playerValueKey = playerValueEntry.getKey();
+                //check if all players are selected
+                if (selectedPlayer1.equalsIgnoreCase("All Players")) {
+                    //if they are there is nothing to compare so sort table
+                    comparePlayerTable(playerValueKey, selection);
+                    break; //nothing else to do so exit loop
+                }
+                //loop through the player1 tree
+                for (Map.Entry<Integer, TreeMap> playerEntry : allPlayerTree.entrySet()) {
+                    //find the player that matches the selected name
+                    if (playerEntry.getValue().containsValue(selectedPlayer1.substring(0, selectedPlayer1.length() - 3))) {
+                        //create a new treemap for the player
+                        TreeMap<Integer, String> player1Value = playerEntry.getValue();
+                        //loop through the player values until we find the matching key for the value
+                        for (Map.Entry<Integer, String> player1Entry : player1Value.entrySet()) {
+                            if (player1Entry.getKey().equals(playerValueKey)) {
+                                //when we find a match save the key
+                                int key = player1Entry.getKey();
+                                //pass it into the compare method
+                                comparePlayerTable(key, selection);
+                                //save the value for comparason with player2
+                                chkPlayer1 = player1Entry.getValue();
+                            }
+                        }
+                    }
+                    //loop through the tree until we find the details for player 2
+                    if (playerEntry.getValue().containsValue(selectedPlayer2.substring(0, selectedPlayer2.length() - 3))) {
+                        TreeMap<Integer, String> player2Value = playerEntry.getValue();
+                        for (Map.Entry<Integer, String> player2Entry : player2Value.entrySet()) {
+                            if (player2Entry.getKey().equals(playerValueKey)) {
+                                int key = player2Entry.getKey();
+                                comparePlayerTable(key, selection);
+                                chkPlayer2 = player2Entry.getValue();
+                            }
+                        }
                     }
                 }
+                if (selection.equals("best")) {
+                    compareBest(chkPlayer1, chkPlayer2, playerValueKey, position);
+                    break;
+                }
+                if (selection.equals("worst")) {
+                    compareWorst(chkPlayer1, chkPlayer2, playerValueKey, position);
+                    break;
+                }
             }
-        } else { //we are dealing with players only
-            //get the key value for what we're comparing from the treeMap of values
-            for (Map.Entry<Integer, String> playerValueEntry : playerValues.entrySet()) {
-                if (playerValueEntry.getValue().equalsIgnoreCase(valueToCompare)) {
-                    //save the value we found
-                    int playerValueKey = playerValueEntry.getKey();
-                    //check if all players are selected
-                    if (selectedPlayer1.equalsIgnoreCase("All Players")) {
-                        //if they are there is nothing to compare so sort table
-                        comparePlayerTable(playerValueKey, selection);
-                        break; //nothing else to do so exit loop
-                    }
-                    //loop through the player1 tree
-                    for (Map.Entry<Integer, TreeMap> playerEntry : allPlayerTree.entrySet()) {
-                        //find the player that matches the selected name
-                        if (playerEntry.getValue().containsValue(selectedPlayer1.substring(0, selectedPlayer1.length() - 3))) {
-                            //create a new treemap for the player
-                            TreeMap<Integer, String> player1Value = playerEntry.getValue();
-                            //loop through the player values until we find the matching key for the value
-                            for (Map.Entry<Integer, String> player1Entry : player1Value.entrySet()) {
-                                if (player1Entry.getKey().equals(playerValueKey)) {
-                                    //when we find a match save the key
-                                    int key = player1Entry.getKey();
-                                    //pass it into the compare method
-                                    comparePlayerTable(key, selection);
-                                    //save the value for comparason with player2
-                                    chkPlayer1 = player1Entry.getValue();
-                                }
-                            }
-                        }
-                        //loop through the tree until we find the details for player 2
-                        if (playerEntry.getValue().containsValue(selectedPlayer2.substring(0, selectedPlayer2.length() - 3))) {
-                            TreeMap<Integer, String> player2Value = playerEntry.getValue();
-                            for (Map.Entry<Integer, String> player2Entry : player2Value.entrySet()) {
-                                if (player2Entry.getKey().equals(playerValueKey)) {
-                                    int key = player2Entry.getKey();
-                                    comparePlayerTable(key, selection);
-                                    chkPlayer2 = player2Entry.getValue();
-                                }
+        }
+    }
+
+    public void getKeeper(String valueToCompare, String selectedPlayer1, String selection, String chkPlayer1, String selectedPlayer2, String chkPlayer2) {
+        String position = "keeper";
+        //get the key value for what we're comparing from the treeMap of values
+        for (Map.Entry<Integer, String> goalieValueEntry : goalieValues.entrySet()) {
+            if (goalieValueEntry.getValue().equalsIgnoreCase(valueToCompare)) {
+                //save the value we found
+                int goalieValueKey = goalieValueEntry.getKey();
+                //check if all keepers are selected
+                if (selectedPlayer1.equalsIgnoreCase("All Keepers")) {
+                    //if they are there is nothing to compare so sort table
+                    compareGoalieTable(goalieValueKey, selection);
+                    break; //nothing else to do so exit loop
+                }
+                //loop through the player1 tree
+                for (Map.Entry<Integer, TreeMap> goalieEntry : allPlayerTree.entrySet()) {
+                    //find the keepers that matches the selected name
+                    if (goalieEntry.getValue().containsValue(selectedPlayer1.substring(0, selectedPlayer1.length() - 3))) {
+                        //create a new treemap for the keepers
+                        TreeMap<Integer, String> player1Value = goalieEntry.getValue();
+                        //loop through the keepers values until we find the matching key for the value
+                        for (Map.Entry<Integer, String> player1Entry : player1Value.entrySet()) {
+                            if (player1Entry.getKey().equals(goalieValueKey)) {
+                                //when we find a match save the key
+                                int key = player1Entry.getKey();
+                                //pass it into the compare method
+                                compareGoalieTable(goalieValueKey, selection);
+                                //save the value for comparason with player2
+                                chkPlayer1 = player1Entry.getValue();
                             }
                         }
                     }
-                    
-                    if (selection.equals("best")) {
-                        compareBest(chkPlayer1, chkPlayer2, playerValueKey);
-                        break;
+                    //loop through the tree until we find the details for player 2
+                    if (goalieEntry.getValue().containsValue(selectedPlayer2.substring(0, selectedPlayer2.length() - 3))) {
+                        TreeMap<Integer, String> player2Value = goalieEntry.getValue();
+                        for (Map.Entry<Integer, String> player2Entry : player2Value.entrySet()) {
+                            if (player2Entry.getKey().equals(goalieValueKey)) {
+                                int key = player2Entry.getKey();
+                                compareGoalieTable(goalieValueKey, selection);
+                                chkPlayer2 = player2Entry.getValue();
+                            }
+                        }
                     }
-                    if (selection.equals("worst")) {
-                        compareWorst(chkPlayer1, chkPlayer2, playerValueKey);
-                        break;
-                    }
+                }
+                if (selection.equals("best")) {
+                    compareBest(chkPlayer1, chkPlayer2, goalieValueKey, position);
+                    break;
+                }
+                if (selection.equals("worst")) {
+                    compareWorst(chkPlayer1, chkPlayer2, goalieValueKey, position);
+                    break;
                 }
             }
         }
     }
     
-    public void compareBest(String chkPlayer1, String chkPlayer2, int playerValueKey) {
+    public void compareBest(String chkPlayer1, String chkPlayer2, int playerValueKey, String position) {
         player1_result_lbl.setText("");
         player2_result_lbl.setText("");
         
         //compare the two strings
         int compare = chkPlayer1.compareToIgnoreCase(chkPlayer2);
-        //best values can be high or low so check based on the value chosen
-        if (playerValueKey == 0 || playerValueKey == 4 || playerValueKey == 5 || playerValueKey == 6 || playerValueKey == 7 || playerValueKey == 9 || playerValueKey == 10 || 
-                playerValueKey == 12 || playerValueKey == 13 || playerValueKey == 14) {
-            if (compare < 0) {
-                player2_result_lbl.setText(chkPlayer2);
+        if (position.equals("player")) {
+            //best values can be high or low so check based on the value chosen
+            if (playerValueKey == 0 || playerValueKey == 4 || playerValueKey == 6 || playerValueKey == 7 || playerValueKey == 9 || playerValueKey == 10
+                    || playerValueKey == 11 || playerValueKey == 12 || playerValueKey == 13 || playerValueKey == 14) {
+                if (compare < 0) {
+                    player2_result_lbl.setText(chkPlayer2);
+                } else {
+                    player1_result_lbl.setText(chkPlayer1);
+
+                }
             } else {
-                player1_result_lbl.setText(chkPlayer1);
-                
+                if (compare > 0) {
+                    player2_result_lbl.setText(chkPlayer2);
+                } else {
+                    player1_result_lbl.setText(chkPlayer1);
+                }
             }
-        } else {
-            if (compare > 0) {
-                player2_result_lbl.setText(chkPlayer2);
+        }
+        if(position.equals("keeper")){
+                if (playerValueKey == 0 || playerValueKey == 4 || playerValueKey == 5 || playerValueKey == 7 || playerValueKey == 10 || playerValueKey == 12) {
+                if (compare < 0) {
+                    player2_result_lbl.setText(chkPlayer2);
+                } else {
+                    player1_result_lbl.setText(chkPlayer1);
+
+                }
             } else {
-                player1_result_lbl.setText(chkPlayer1);
-                
+                if (compare > 0) {
+                    player2_result_lbl.setText(chkPlayer2);
+                } else {
+                    player1_result_lbl.setText(chkPlayer1);
+                }
             }
         }
     }
  
-    public void compareWorst(String chkPlayer1, String chkPlayer2, int playerValueKey) {
+    public void compareWorst(String chkPlayer1, String chkPlayer2, int playerValueKey, String position) {
         player1_result_lbl.setText("");
         player2_result_lbl.setText("");
         
         //compare the two strings
         int compare = chkPlayer1.compareToIgnoreCase(chkPlayer2);
-        //worst values can be high or low so check based on the value chosen
-        if (playerValueKey == 0 || playerValueKey == 4 || playerValueKey == 5 || playerValueKey == 6 || playerValueKey == 7 || playerValueKey == 9 || playerValueKey == 10 || 
-                playerValueKey == 12 || playerValueKey == 13 || playerValueKey == 14) {
-            if (compare > 0) {
-                player2_result_lbl.setText(chkPlayer2);
+        if (position.equals("player")) {
+            //worst values can be high or low so check based on the value chosen
+            if (playerValueKey == 0 || playerValueKey == 4 || playerValueKey == 6 || playerValueKey == 7 || playerValueKey == 9 || playerValueKey == 10
+                    || playerValueKey == 11 || playerValueKey == 12 || playerValueKey == 13 || playerValueKey == 14) {
+                if (compare > 0) {
+                    player2_result_lbl.setText(chkPlayer2);
+                } else {
+                    player1_result_lbl.setText(chkPlayer1);
+                }
             } else {
-                player1_result_lbl.setText(chkPlayer1);
+                if (compare < 0) {
+                    player2_result_lbl.setText(chkPlayer2);
+                } else {
+                    player1_result_lbl.setText(chkPlayer1);
+                }
             }
-        } else {
-            if (compare < 0) {
-                player2_result_lbl.setText(chkPlayer2);
+        }
+        if (position.equals("keeper")) {
+            //worst values can be high or low so check based on the value chosen
+            if (playerValueKey == 0 || playerValueKey == 4 || playerValueKey == 5 || playerValueKey == 7 || playerValueKey == 10 || playerValueKey == 12) {
+                if (compare > 0) {
+                    player2_result_lbl.setText(chkPlayer2);
+                } else {
+                    player1_result_lbl.setText(chkPlayer1);
+                }
             } else {
-                player1_result_lbl.setText(chkPlayer1);
+                if (compare < 0) {
+                    player2_result_lbl.setText(chkPlayer2);
+                } else {
+                    player1_result_lbl.setText(chkPlayer1);
+                }
             }
         }
     }
@@ -1082,14 +1165,18 @@ public class PlayersUI extends javax.swing.JFrame {
         playertableModel.setRowCount(0);
         DefaultTableModel goalieTableModel = (DefaultTableModel) goalie_tbl.getModel();
         goalieTableModel.setRowCount(0);
-        
+        //clear label text
         player1_result_lbl.setText("");
         player2_result_lbl.setText("");
         player1_lbl.setText("");
         player2_lbl.setText("");
-        
+        //clear check boxes
         best_chk.setSelected(false);
         worst_chk.setSelected(false);
+        //reset combo boxes to default state
+        player1_cmbo.setSelectedIndex(0);
+        player2_cmbo.setSelectedIndex(0);
+        compare_cmbo.setSelectedIndex(0);
     }//GEN-LAST:event_clear_btnMouseClicked
 
     public void compareGoalieTable(int key, String selection) {
@@ -1127,14 +1214,14 @@ public class PlayersUI extends javax.swing.JFrame {
 
         List<TableRowSorter.SortKey> sortKeys = new ArrayList<>();
         if (selection.equals("best")) {
-            if (key == 0 || key == 4 || key == 5 || key == 6 || key == 7 || key == 9 || key == 10 || key == 12 || key == 13 || key == 14) {
+            if (key == 4 || key == 5 || key == 6 || key == 7 || key == 9 || key == 10 || key == 11 || key == 12 || key == 13 || key == 14) {
                 sortKeys.add(new TableRowSorter.SortKey(key, SortOrder.ASCENDING));
             } else {
                 sortKeys.add(new TableRowSorter.SortKey(key, SortOrder.DESCENDING));
             }
         }
         if (selection.equals("worst")) {
-            if (key == 0 || key == 4 || key == 5 || key == 6 || key == 7 || key == 9 || key == 10 || key == 12 || key == 13 || key == 14) {
+            if (key == 4 || key == 5 || key == 6 || key == 7 || key == 9 || key == 10 || key == 11 || key == 12 || key == 13 || key == 14) {
                 sortKeys.add(new TableRowSorter.SortKey(key, SortOrder.DESCENDING));
             } else {
                 sortKeys.add(new TableRowSorter.SortKey(key, SortOrder.ASCENDING));
